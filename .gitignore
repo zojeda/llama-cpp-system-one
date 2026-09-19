@@ -1,0 +1,9 @@
+/target/
+.env
+*.log
+node_modules/
+/benchmarks/results/
+*.gguf
+.agents/
+.claude/
+skills-lock.json
