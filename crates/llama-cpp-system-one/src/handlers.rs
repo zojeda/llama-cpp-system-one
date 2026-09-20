@@ -28,7 +28,7 @@ pub(super) async fn models(State(state): State<AppState>) -> Json<Value> {
     );
     Json(json!({"models": names.iter().map(|name| json!({
         "name":name,
-        "description":format!("Local DiffusionGemma GGUF, one restricted-canvas read. Served as {}.", state.model_id),
+        "description":format!("Local DiffusionGemma GGUF, structured diffusion reads. Served as {}.", state.model_id),
         "release_date":"2026-09-19"
     })).collect::<Vec<_>>()}))
 }
@@ -42,7 +42,7 @@ pub(super) async fn system_one(
             ApiError::new(
                 StatusCode::PAYLOAD_TOO_LARGE,
                 "invalid_request_error",
-                "Request body exceeds 8 MB",
+                "Request body exceeds 64 MiB",
             )
         } else {
             ValidationError::new(&["body"], rejection.body_text(), "json_invalid").into()

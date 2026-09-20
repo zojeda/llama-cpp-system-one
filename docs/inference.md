@@ -46,7 +46,7 @@ flowchart LR
     S --> A[Probabilities and typed answers]
 ```
 
-The [compiler](../crates/system-one/src/compiler.rs) constructs the prompt and slot prefixes. The [inference engine](../crates/llama-diffusion-structured/src/engine.rs) then:
+The [compiler](../crates/system-one/src/compiler.rs) constructs the prompt and slot prefixes. The [inference engine](../crates/llama-diffusion-structured/src/engine.rs), with default text options, then:
 
 1. Wraps the prompt in DiffusionGemma's text chat markers and tokenizes it.
 2. Appends fixed prefixes and one seeded random token per answer slot to the canvas.
@@ -54,7 +54,7 @@ The [compiler](../crates/system-one/src/compiler.rs) constructs the prompt and s
 4. Evaluates the full canvas with one `PKV_DECODE` call.
 5. Reads the allowed candidate logits at each answer position and computes probabilities.
 
-During the canvas read, each position can attend to positions on either side and use the prompt cache. The answer slots therefore share context; they are not independent model runs. The engine returns distributions after that read, without writing predicted answers into a second canvas or running a refinement loop. "One read" counts the canvas evaluation; prompt prefill adds work before it.
+During the canvas read, each position can attend to positions on either side and use the prompt cache. The answer slots therefore share context; they are not independent model runs. With `steps=1`, the engine returns distributions after that read. Additional steps refine noisy answer slots while preserving fixed question text and feed the previous full-canvas logits into self-conditioning. "One read" counts the canvas evaluation; prompt prefill adds work before it.
 
 The prompt cache holds the attention keys and values computed during prefill. The decoder reuses those representations to condition its canvas predictions on the supplied state and questions.
 
@@ -78,14 +78,24 @@ For `choice` and `score`, we compute confidence as `1 - H(p) / ln(K)`, where `H(
 
 This normalization measures preference among the supplied options. It discards probability mass on other vocabulary tokens. Adding an option can change the distribution, and high entropy confidence can accompany a wrong answer. We have not calibrated these values as probabilities of correctness.
 
-## Implementation details
+## Extensions and native integration
 
-The [native wrapper](../crates/llama-diffusion-structured/src/native.rs) uses `llama_diffusion_set_sc(model, nullptr, 0.0, 1.0, true)` for the canvas phase. The zero gate disables prior-step self-conditioning.
+`steps=2..8` repeats canvas evaluation with self-conditioning from the previous step's raw vocabulary logits. The sampler uses the pinned llama.cpp entropy-bound refinement: sample low-entropy answer slots within a 0.1 entropy budget, renoise the others, and lower the sampling temperature from 0.8 toward 0.4. Fixed template tokens remain intact. Final answer probabilities always use the unscaled logits (temperature 1).
 
-We seed `ChaCha8Rng` for the initial slot tokens. Matching requests and seeds reproduce that initialization. The C++ prototype uses `std::mt19937`, so equal numeric seeds across the two implementations need not produce equal canvases or probabilities.
+`samples=2..32` repeats the read with fresh noise and averages probabilities, then computes the choice, expected score, and confidence from that average. It does not average logits or vote over winning labels. Defaults still perform one sample; there are no automatic uncertainty rereads.
 
-We use the text-only `<|turn>` / `<turn|>` chat framing with `think=0`. The C++ prototype's common chat helper enables a thinking preface by default; the Rust prompt has seven fewer tokens with the tested GGUF. We refresh the prompt cache for each request.
+Long question lists use canvases of at most 64 tokens, split at question boundaries. Every chunk sees the full question prompt. With `sequential=true`, each later chunk also sees the earlier chunks' selected answer codes appended to the model turn. Otherwise chunks share no generated answers. All native work runs on the dedicated worker.
 
-The canvas length follows the question prefixes and slot count. It must fit in one `--batch-size` batch, and prompt plus canvas must fit in `--context-size`. We do not pad this restricted read to the full generator's 256-token canvas or split it into multiple reads.
+`think` generates a bounded internal thought in blocks of up to 64 tokens, using the pinned entropy-bound denoiser with at most 48 iterations per block. A thought delimiter or turn delimiter ends generation; reaching the requested budget force-closes the thought. The answer reads use its token IDs as additional context. The thought text is not returned or logged.
 
-`usage.input_tokens` counts prompt and canvas tokens; `output_tokens` is 0. The CLI's `forward_ms` covers the canvas evaluation and logit synchronization/download, excluding prompt prefill. The HTTP benchmark includes the request's full elapsed time.
+Image requests require a compatible vision-projector GGUF. Rust decodes the compressed image into RGB, and `mtmd` supplies image delimiters and projected patch embeddings. Images precede the state. The CMake wrapper builds a copy of the pinned DiffusionGemma source with two integration changes: preserve the projector's embedding scale, and allow bidirectional attention within each image prefill batch. It leaves the submodule untouched. Text prefill remains causal. Image input is not available with unpatched external shared libraries.
+
+## Reproducibility and accounting
+
+We seed `ChaCha8Rng` for noise and sampling. Sample seeds increment by 7919; question chunk seeds increment by 104729, with wrapping arithmetic. Matching requests and seeds reproduce initialization. Different backends and RNG implementations can produce different probabilities.
+
+The first denoising step disables previous-step self-conditioning. Each new sample starts from fresh noise and no prior logits. The native wrapper synchronizes and clears borrowed self-conditioning pointers before returning, including on decode errors. Prompt prefill refreshes the cache before each question chunk; samples reuse that prefix.
+
+The service keeps user text separate from special-token chat framing. Vision delimiters come from the projector tokenizer. User-supplied strings cannot inject chat control tokens.
+
+See [limits and usage](api.md#limits-and-usage) for token accounting. `forward_ms` adds canvas evaluations, sampling, and logit transfers across reads and thoughts, excluding prompt prefill and image encoding. HTTP latency includes all work.

@@ -10,7 +10,7 @@ use axum::{
 };
 use std::sync::Arc;
 
-pub const MAX_BODY_BYTES: usize = 8 * 1024 * 1024;
+pub const MAX_BODY_BYTES: usize = 64 * 1024 * 1024;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -135,7 +135,7 @@ mod tests {
         let (app, mut receiver) = app(None);
         for (model, steps, expected) in [
             ("missing", 1, StatusCode::NOT_FOUND),
-            ("local", 2, StatusCode::UNPROCESSABLE_ENTITY),
+            ("local", 9, StatusCode::UNPROCESSABLE_ENTITY),
         ] {
             let body =
                 json!({"model":model,"state":"x","questions":{"q":{"type":"noul"}},"steps":steps})
@@ -152,6 +152,38 @@ mod tests {
             StatusCode::PAYLOAD_TOO_LARGE
         );
         assert!(receiver.try_recv().is_err());
+    }
+
+    #[tokio::test]
+    async fn extensions_reach_the_worker_and_thought_usage_reaches_the_client() {
+        let (app, mut receiver) = app(None);
+        let responder = tokio::spawn(async move {
+            let job = receiver.recv().await.unwrap();
+            let options = job.request.options();
+            assert_eq!(
+                (
+                    options.steps,
+                    options.samples,
+                    options.think,
+                    options.sequential
+                ),
+                (3, 2, 8, true)
+            );
+            job.reply
+                .send(Ok(system_one::Response {
+                    model: "local".into(),
+                    answers: Default::default(),
+                    usage: system_one::Usage {
+                        input_tokens: 123,
+                        output_tokens: 8,
+                    },
+                }))
+                .unwrap();
+        });
+        let (status, body) = send(app, "/v1/systemone", r#"{"model":"local","state":"x","questions":{"q":{"type":"noul"}},"steps":3,"samples":2,"think":8,"sequential":true}"#, None).await;
+        assert_eq!(status, StatusCode::OK);
+        assert_eq!(body["usage"]["output_tokens"], 8);
+        responder.await.unwrap();
     }
 
     #[tokio::test]

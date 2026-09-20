@@ -5,3 +5,7 @@
 #![allow(clippy::all)]
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+
+/// Bundled build applies the DiffusionGemma image-prefill integration.
+pub const IMAGE_PREFILL_SUPPORTED: bool =
+    matches!(env!("DIFFUSION_IMAGE_PREFILL").as_bytes(), b"1");

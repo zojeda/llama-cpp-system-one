@@ -12,6 +12,7 @@ cuda = ["llama-diffusion-sys/cuda"]
 native = ["llama-diffusion-sys/native"]
 
 [dependencies]
+image.workspace = true
 llama-diffusion-sys.workspace = true
 clap.workspace = true
 rand.workspace = true

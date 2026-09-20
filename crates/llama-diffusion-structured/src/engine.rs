@@ -1,8 +1,9 @@
-//! Token preparation and the single-forward inference lifecycle.
+//! Token preparation, repeated reads, and bounded diffusion generation.
 
-use crate::native::{Batch, Native};
+use crate::native::{Batch, Native, PromptPart};
 use crate::{Error, ModelConfig, ReadRequest, ReadResult, Result, SlotRead, restricted_softmax};
-use rand::{Rng, SeedableRng};
+use crate::{ImageInput, ReadOptions, denoise};
+use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 use std::{collections::HashSet, time::Instant};
 
@@ -68,105 +69,530 @@ impl Engine {
     }
 
     pub fn read(&mut self, request: &ReadRequest, seed: u64) -> Result<ReadResult> {
+        self.read_with_options(request, seed, ReadOptions::default(), &[])
+    }
+
+    pub fn read_with_options(
+        &mut self,
+        request: &ReadRequest,
+        seed: u64,
+        options: ReadOptions,
+        images: &[ImageInput],
+    ) -> Result<ReadResult> {
+        options.validate()?;
         if request.prompt.trim().is_empty() || request.slots.is_empty() {
             return Err(Error::InvalidInput(
                 "A prompt and at least one slot are required".into(),
             ));
         }
-        // Text-only DiffusionGemma user turn; user content cannot introduce control tokens.
-        let mut prompt = self.native.tokenize("<|turn>user\n", true, true)?;
-        prompt.extend(self.native.tokenize(request.prompt.trim(), false, false)?);
-        prompt.extend(
-            self.native
-                .tokenize("<turn|>\n<|turn>model\n", false, true)?,
-        );
+        if !images.is_empty() && (options.think > 0 || options.sequential) {
+            return Err(Error::InvalidInput(
+                "Images cannot be combined with think or sequential".into(),
+            ));
+        }
+        let mut parts = vec![PromptPart::Text(self.native.tokenize(
+            "<|turn>user\n",
+            true,
+            true,
+        )?)];
+        parts.extend(self.native.image_parts(images)?);
+        parts.push(PromptPart::Text(self.native.tokenize(
+            request.prompt.trim(),
+            false,
+            false,
+        )?));
+        parts.push(PromptPart::Text(self.native.tokenize(
+            "<turn|>\n<|turn>model\n",
+            false,
+            true,
+        )?));
+        let base_length: usize = parts.iter().map(PromptPart::len).sum();
+        let prepared = request
+            .slots
+            .iter()
+            .map(|slot| {
+                if slot.candidates.is_empty() {
+                    return Err(Error::InvalidInput("Each slot needs a candidate".into()));
+                }
+                let mut candidates = Vec::new();
+                for candidate in &slot.candidates {
+                    let tokens = self.native.tokenize(candidate, false, false)?;
+                    if tokens.len() != 1 || candidates.contains(&tokens[0]) {
+                        return Err(Error::InvalidInput(format!(
+                            "Candidate {candidate:?} must encode to one distinct token"
+                        )));
+                    }
+                    candidates.push(tokens[0]);
+                }
+                Ok(PreparedSlot {
+                    prefix: self.native.tokenize(&slot.prefix, false, false)?,
+                    candidates,
+                })
+            })
+            .collect::<Result<Vec<_>>>()?;
+        let capacity = 64.min(self.native.batch_size);
+        let lengths: Vec<_> = prepared.iter().map(|s| s.prefix.len() + 1).collect();
+        let groups = chunk_ranges(&lengths, capacity)?;
+        let canvas_reserve = if options.sequential {
+            lengths.iter().sum()
+        } else {
+            groups
+                .iter()
+                .map(|r| lengths[r.clone()].iter().sum::<usize>())
+                .max()
+                .unwrap_or(0)
+        };
+        let thought_reserve = if options.think > 0 {
+            options.think
+                + self
+                    .native
+                    .tokenize("<|channel>thought\n<channel|>", false, true)?
+                    .len()
+        } else {
+            0
+        };
+        if base_length + canvas_reserve + thought_reserve > self.native.n_ctx {
+            return Err(Error::InvalidInput(format!(
+                "Prompt, thought budget, and canvas need {} tokens; context allows {}",
+                base_length + canvas_reserve + thought_reserve,
+                self.native.n_ctx
+            )));
+        }
+        let mut result = ReadResult {
+            slots: Vec::new(),
+            prompt_tokens: 0,
+            canvas_tokens: 0,
+            output_tokens: 0,
+            seed,
+            forward_ms: 0.0,
+        };
+        let mut batch = Batch::new(self.native.batch_size)?;
+        let mut suffix = Vec::new();
+        if options.think > 0 {
+            let thought = self.think(&parts, options.think, seed, &mut batch)?;
+            suffix = thought.suffix;
+            result.prompt_tokens += thought.input_tokens;
+            result.output_tokens = thought.output_tokens;
+            result.forward_ms += thought.forward_ms;
+        }
+        for (group_index, range) in groups.iter().enumerate() {
+            let group = &prepared[range.clone()];
+            let prompt_length = self.native.prefill(&parts, &suffix, &mut batch)?;
+            let group_seed = seed.wrapping_add(104729_u64.wrapping_mul(group_index as u64));
+            let mut reads = Vec::new();
+            for sample in 0..options.samples {
+                let sample_seed = group_seed.wrapping_add(7919_u64.wrapping_mul(sample as u64));
+                let (slots, canvas, time) =
+                    self.read_canvas(group, prompt_length, sample_seed, options.steps, &mut batch)?;
+                result.prompt_tokens += prompt_length;
+                result.canvas_tokens += canvas;
+                result.forward_ms += time;
+                reads.push(slots);
+            }
+            let averaged = average_reads(reads)?;
+            if options.sequential {
+                for (slot, read) in group.iter().zip(&averaged) {
+                    suffix.extend(&slot.prefix);
+                    suffix.push(slot.candidates[best_index(&read.probabilities)]);
+                }
+            }
+            result.slots.extend(averaged);
+        }
+        Ok(result)
+    }
 
+    fn read_canvas(
+        &mut self,
+        group: &[PreparedSlot],
+        prompt_length: usize,
+        seed: u64,
+        steps: usize,
+        batch: &mut Batch,
+    ) -> Result<(Vec<SlotRead>, usize, f64)> {
         let mut rng = ChaCha8Rng::seed_from_u64(seed);
         let mut canvas = Vec::new();
-        let mut slots = Vec::with_capacity(request.slots.len());
-        for slot in &request.slots {
-            if slot.candidates.is_empty() {
-                return Err(Error::InvalidInput(
-                    "Each slot needs at least one candidate".into(),
-                ));
-            }
-            let mut candidate_tokens = Vec::with_capacity(slot.candidates.len());
-            for candidate in &slot.candidates {
-                let tokens = self.native.tokenize(candidate, false, false)?;
-                if tokens.len() != 1 || candidate_tokens.contains(&tokens[0]) {
-                    return Err(Error::InvalidInput(format!(
-                        "Candidate {candidate:?} must encode to exactly one distinct token (got {} tokens)",
-                        tokens.len()
-                    )));
-                }
-                candidate_tokens.push(tokens[0]);
-            }
-            canvas.extend(self.native.tokenize(&slot.prefix, false, false)?);
+        let mut slots = Vec::new();
+        for slot in group {
+            canvas.extend(&slot.prefix);
             let position = canvas.len();
-            let noise = loop {
-                let token = rng.random_range(0..self.native.n_vocab);
-                if token != self.native.mask {
-                    break token;
-                }
-            };
-            canvas.push(noise);
+            let initial_token = denoise::noise(self.native.n_vocab, self.native.mask, &mut rng);
+            canvas.push(initial_token);
             slots.push(SlotRead {
                 canvas_position: position,
-                absolute_position: prompt.len() + position,
-                initial_token: noise,
-                candidate_tokens,
+                absolute_position: prompt_length + position,
+                initial_token,
+                candidate_tokens: slot.candidates.clone(),
                 logits: Vec::new(),
                 probabilities: Vec::new(),
             });
         }
-        if prompt.len() + canvas.len() > self.native.n_ctx {
-            return Err(Error::InvalidInput(format!(
-                "Prompt and canvas need {} tokens, context allows {}",
-                prompt.len() + canvas.len(),
-                self.native.n_ctx
-            )));
-        }
-        if canvas.len() > self.native.batch_size {
-            return Err(Error::InvalidInput(format!(
-                "The entire {}-token canvas must fit in one {}-token batch",
-                canvas.len(),
-                self.native.batch_size
-            )));
-        }
-
-        let mut batch = Batch::new(self.native.batch_size)?;
-        for (i, chunk) in prompt.chunks(self.native.batch_size).enumerate() {
-            let offset = i * self.native.batch_size;
-            self.native.prefill_phase(prompt.len(), offset);
-            self.native.decode(&mut batch, chunk, offset, false)?;
-        }
-        self.native.synchronize();
-        self.native.canvas_phase(prompt.len());
+        let positions: Vec<_> = slots.iter().map(|s| s.canvas_position).collect();
+        let mut previous = None;
+        let mut inverse_temperature = 1.0;
         let start = Instant::now();
-        self.native
-            .decode(&mut batch, &canvas, prompt.len(), true)?;
-        for slot in &mut slots {
-            slot.logits = self
-                .native
-                .logits(slot.canvas_position, &slot.candidate_tokens)?;
+        for step in 0..steps {
+            self.native.decode_canvas(
+                batch,
+                &canvas,
+                prompt_length,
+                previous.as_deref(),
+                inverse_temperature,
+            )?;
+            if step + 1 == steps {
+                for slot in &mut slots {
+                    slot.logits = self
+                        .native
+                        .logits(slot.canvas_position, &slot.candidate_tokens)?;
+                    slot.probabilities = restricted_softmax(&slot.logits)?;
+                }
+            } else {
+                let logits = self.native.all_logits()?;
+                let temperature = 0.4 + 0.4 * (steps - step) as f64 / steps as f64;
+                denoise::refine(
+                    &mut canvas,
+                    &logits,
+                    &positions,
+                    self.native.n_vocab as usize,
+                    temperature,
+                    self.native.mask,
+                    &mut rng,
+                )?;
+                previous = Some(logits);
+                inverse_temperature = (1.0 / temperature) as f32;
+            }
         }
-        let forward_ms = start.elapsed().as_secs_f64() * 1000.0;
-        for slot in &mut slots {
-            slot.probabilities = restricted_softmax(&slot.logits)?;
+        Ok((slots, canvas.len(), start.elapsed().as_secs_f64() * 1000.0))
+    }
+
+    fn think(
+        &mut self,
+        parts: &[PromptPart],
+        budget: usize,
+        seed: u64,
+        batch: &mut Batch,
+    ) -> Result<Thought> {
+        let mut rng = ChaCha8Rng::seed_from_u64(seed);
+        let mut suffix = self.native.tokenize("<|channel>thought\n", false, true)?;
+        let close = self.native.tokenize("<channel|>", false, true)?;
+        let turn_close = self.native.tokenize("<turn|>", false, true)?;
+        if close.len() != 1 || turn_close.len() != 1 {
+            return Err(Error::UnsupportedModel);
         }
-        Ok(ReadResult {
-            slots,
-            prompt_tokens: prompt.len(),
-            canvas_tokens: canvas.len(),
-            seed,
+        let mut output_tokens = 0;
+        let mut input_tokens = 0;
+        let mut forward_ms = 0.0;
+        while output_tokens < budget {
+            let prompt_length = self.native.prefill(parts, &suffix, batch)?;
+            input_tokens += prompt_length;
+            let count = 64.min(self.native.batch_size).min(budget - output_tokens);
+            let mut canvas: Vec<_> = (0..count)
+                .map(|_| denoise::noise(self.native.n_vocab, self.native.mask, &mut rng))
+                .collect();
+            let positions: Vec<_> = (0..count).collect();
+            let mut previous = None;
+            let mut previous_best = Vec::new();
+            let mut inverse_temperature = 1.0;
+            let start = Instant::now();
+            for step in 0..48 {
+                self.native.decode_canvas(
+                    batch,
+                    &canvas,
+                    prompt_length,
+                    previous.as_deref(),
+                    inverse_temperature,
+                )?;
+                let logits = self.native.all_logits()?;
+                let temperature = 0.4 + 0.4 * (48 - step) as f64 / 48.0;
+                let predictions = denoise::refine(
+                    &mut canvas,
+                    &logits,
+                    &positions,
+                    self.native.n_vocab as usize,
+                    temperature,
+                    self.native.mask,
+                    &mut rng,
+                )?;
+                let best: Vec<_> = predictions.iter().map(|p| p.best).collect();
+                let stable = best == previous_best
+                    && predictions.iter().map(|p| p.entropy).sum::<f64>() / (count as f64) < 0.005;
+                previous_best = best;
+                if stable {
+                    break;
+                }
+                previous = Some(logits);
+                inverse_temperature = (1.0 / temperature) as f32;
+            }
+            forward_ms += start.elapsed().as_secs_f64() * 1000.0;
+            let stop = previous_best
+                .iter()
+                .position(|t| *t == close[0] || *t == turn_close[0]);
+            let length = stop.unwrap_or(previous_best.len());
+            suffix.extend(&previous_best[..length]);
+            output_tokens += length + usize::from(stop.is_some());
+            if stop.is_some() {
+                break;
+            }
+        }
+        suffix.extend(close);
+        Ok(Thought {
+            suffix,
+            input_tokens,
+            output_tokens,
             forward_ms,
         })
     }
 }
 
+struct PreparedSlot {
+    prefix: Vec<i32>,
+    candidates: Vec<i32>,
+}
+struct Thought {
+    suffix: Vec<i32>,
+    input_tokens: usize,
+    output_tokens: usize,
+    forward_ms: f64,
+}
+
+fn chunk_ranges(lengths: &[usize], capacity: usize) -> Result<Vec<std::ops::Range<usize>>> {
+    let mut ranges = Vec::new();
+    let (mut start, mut length) = (0, 0);
+    for (i, &size) in lengths.iter().enumerate() {
+        if size > capacity {
+            return Err(Error::InvalidInput(format!(
+                "A question's {size}-token template exceeds the {capacity}-token canvas"
+            )));
+        }
+        if length + size > capacity {
+            ranges.push(start..i);
+            start = i;
+            length = 0;
+        }
+        length += size;
+    }
+    if start < lengths.len() {
+        ranges.push(start..lengths.len());
+    }
+    Ok(ranges)
+}
+
+fn best_index(probabilities: &[f64]) -> usize {
+    probabilities.iter().enumerate().fold(
+        0,
+        |best, (i, p)| if *p > probabilities[best] { i } else { best },
+    )
+}
+
+fn average_reads(mut reads: Vec<Vec<SlotRead>>) -> Result<Vec<SlotRead>> {
+    let count = reads.len();
+    if count == 0 {
+        return Err(Error::InvalidLogits);
+    }
+    let mut means = reads.remove(0);
+    for read in reads {
+        if read.len() != means.len() {
+            return Err(Error::InvalidLogits);
+        }
+        for (mean, slot) in means.iter_mut().zip(read) {
+            if mean.candidate_tokens != slot.candidate_tokens
+                || mean.probabilities.len() != slot.probabilities.len()
+            {
+                return Err(Error::InvalidLogits);
+            }
+            for (sum, p) in mean.probabilities.iter_mut().zip(slot.probabilities) {
+                *sum += p;
+            }
+        }
+    }
+    for mean in &mut means {
+        for p in &mut mean.probabilities {
+            *p /= count as f64;
+        }
+        // An averaged distribution has no single native logit row.
+        if count > 1 {
+            mean.logits.clear();
+        }
+    }
+    Ok(means)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn chunking_preserves_order_and_keeps_whole_questions() {
+        assert_eq!(
+            chunk_ranges(&[12, 20, 32, 1, 63], 64).unwrap(),
+            vec![0..3, 3..5]
+        );
+        assert_eq!(chunk_ranges(&[64, 64], 64).unwrap(), vec![0..1, 1..2]);
+        assert!(chunk_ranges(&[65], 64).is_err());
+    }
+
+    #[test]
+    fn samples_average_probabilities_instead_of_logits_or_winning_labels() {
+        let slot = |probabilities: Vec<f64>| SlotRead {
+            canvas_position: 0,
+            absolute_position: 1,
+            initial_token: 7,
+            candidate_tokens: vec![1, 2],
+            logits: vec![9.0, 1.0],
+            probabilities,
+        };
+        let means = average_reads(vec![
+            vec![slot(vec![0.99, 0.01])],
+            vec![slot(vec![0.25, 0.75])],
+        ])
+        .unwrap();
+        assert_eq!(means[0].probabilities, vec![0.62, 0.38]);
+        assert!(means[0].logits.is_empty());
+    }
+
+    #[test]
+    #[ignore = "Requires DIFFUSION_MODEL and a working native backend"]
+    fn native_extensions_average_refine_think_and_chunk() {
+        let config = ModelConfig::new(std::env::var("DIFFUSION_MODEL").unwrap());
+        let mut engine = Engine::load(&config).unwrap();
+        let request = ReadRequest::scm("Ground granulated blast furnace slag is used in concrete.");
+        let first = engine.read(&request, 42).unwrap();
+        let second = engine.read(&request, 42 + 7919).unwrap();
+        let averaged = engine
+            .read_with_options(
+                &request,
+                42,
+                ReadOptions {
+                    samples: 2,
+                    ..Default::default()
+                },
+                &[],
+            )
+            .unwrap();
+        for (i, &p) in averaged.slots[0].probabilities.iter().enumerate() {
+            assert!(
+                (p - (first.slots[0].probabilities[i] + second.slots[0].probabilities[i]) / 2.0)
+                    .abs()
+                    < 1e-5
+            );
+        }
+        assert_eq!(averaged.prompt_tokens, first.prompt_tokens * 2);
+        assert_eq!(averaged.canvas_tokens, first.canvas_tokens * 2);
+        let refined = engine
+            .read_with_options(
+                &request,
+                42,
+                ReadOptions {
+                    steps: 3,
+                    ..Default::default()
+                },
+                &[],
+            )
+            .unwrap();
+        assert!((refined.slots[0].probabilities.iter().sum::<f64>() - 1.0).abs() < 1e-6);
+        let thought = engine
+            .read_with_options(
+                &request,
+                42,
+                ReadOptions {
+                    think: 8,
+                    ..Default::default()
+                },
+                &[],
+            )
+            .unwrap();
+        assert!((1..=8).contains(&thought.output_tokens));
+        assert!(thought.prompt_tokens > first.prompt_tokens);
+        let many = ReadRequest {
+            prompt: request.prompt.clone(),
+            slots: vec![request.slots[0].clone(); 12],
+        };
+        for sequential in [false, true] {
+            let read = engine
+                .read_with_options(
+                    &many,
+                    42,
+                    ReadOptions {
+                        sequential,
+                        ..Default::default()
+                    },
+                    &[],
+                )
+                .unwrap();
+            assert_eq!(read.slots.len(), 12);
+            assert_eq!(read.canvas_tokens, first.canvas_tokens * 12);
+            assert!(
+                read.slots
+                    .iter()
+                    .all(|slot| (slot.probabilities.iter().sum::<f64>() - 1.0).abs() < 1e-6)
+            );
+        }
+        let repeated = engine.read(&request, 42).unwrap();
+        for (a, b) in first.slots[0]
+            .probabilities
+            .iter()
+            .zip(&repeated.slots[0].probabilities)
+        {
+            assert!(
+                (a - b).abs() < 1e-5,
+                "Extension state leaked into the next request"
+            );
+        }
+        let error = engine
+            .read_with_options(
+                &request,
+                42,
+                ReadOptions::default(),
+                &[ImageInput { bytes: vec![1] }],
+            )
+            .unwrap_err();
+        assert!(error.to_string().contains("--mmproj"));
+    }
+
+    #[test]
+    #[ignore = "Requires DIFFUSION_MODEL and DIFFUSION_MMPROJ"]
+    fn native_images_prefill_and_preserve_text_reproducibility() {
+        let mut config = ModelConfig::new(std::env::var("DIFFUSION_MODEL").unwrap());
+        config.mmproj = Some(std::env::var("DIFFUSION_MMPROJ").unwrap().into());
+        let mut engine = Engine::load(&config).unwrap();
+        let request = ReadRequest::scm("Ground granulated blast furnace slag.");
+        let before = engine.read(&request, 42).unwrap();
+        let mut png = std::io::Cursor::new(Vec::new());
+        image::RgbImage::from_pixel(224, 224, image::Rgb([255, 0, 0]))
+            .write_to(&mut png, image::ImageFormat::Png)
+            .unwrap();
+        let question = ReadRequest {
+            prompt: "What color is the image? A = red, B = blue".into(),
+            slots: vec![crate::Slot {
+                prefix: "Answer: ".into(),
+                candidates: vec!["A".into(), "B".into()],
+            }],
+        };
+        let image = ImageInput {
+            bytes: png.into_inner(),
+        };
+        let read = engine
+            .read_with_options(
+                &question,
+                42,
+                ReadOptions {
+                    steps: 2,
+                    samples: 2,
+                    ..Default::default()
+                },
+                &[image],
+            )
+            .unwrap();
+        assert!(read.prompt_tokens > 100);
+        assert!(read.slots[0].probabilities[0] > read.slots[0].probabilities[1]);
+        let after = engine.read(&request, 42).unwrap();
+        for (a, b) in before.slots[0]
+            .probabilities
+            .iter()
+            .zip(&after.slots[0].probabilities)
+        {
+            assert!((a - b).abs() < 1e-5);
+        }
+    }
 
     #[test]
     #[ignore = "Requires DIFFUSION_MODEL and a working native backend"]

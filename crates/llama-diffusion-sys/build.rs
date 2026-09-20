@@ -41,18 +41,24 @@ fn main() {
             .expect("LLAMA_CPP_LIB_DIR must point to the matching shared-library directory");
         println!("cargo::rerun-if-changed={}", libraries.display());
         println!("cargo::rustc-link-search=native={}", libraries.display());
+        println!("cargo::rustc-link-lib=dylib=mtmd");
         println!("cargo::rustc-link-lib=dylib=llama");
+        println!("cargo::rustc-env=DIFFUSION_IMAGE_PREFILL=0");
         println!(
             "cargo::warning=Using prebuilt llama.cpp; Cargo backend features do not configure this external library"
         );
     } else {
         build_native(&manifest, &source);
+        println!("cargo::rustc-env=DIFFUSION_IMAGE_PREFILL=1");
     }
 
     let bindings = bindgen::Builder::default()
         .header(source.join("include/llama.h").to_string_lossy())
+        .header(source.join("tools/mtmd/mtmd.h").to_string_lossy())
+        .clang_arg(format!("-I{}", source.join("include").display()))
+        .allowlist_function("mtmd_.*")
         .clang_arg(format!("-I{}", source.join("ggml/include").display()))
-        .allowlist_function("llama_(backend_init|backend_free|model_default_params|context_default_params|model_load_from_file|model_free|model_get_vocab|model_is_diffusion|init_from_model|free|n_ctx|n_batch|n_ubatch|set_causal_attn|diffusion_set_sc|diffusion_set_phase|diffusion_pkv_bytes_per_token|batch_init|batch_free|decode|get_logits|synchronize|tokenize|token_to_piece|vocab_n_tokens|vocab_mask|vocab_is_control)")
+        .allowlist_function("llama_(backend_init|backend_free|model_default_params|context_default_params|model_load_from_file|model_free|model_get_vocab|model_n_embd_inp|model_is_diffusion|init_from_model|free|n_ctx|n_batch|n_ubatch|set_causal_attn|diffusion_set_sc|diffusion_set_phase|diffusion_pkv_bytes_per_token|batch_init|batch_free|decode|get_logits|synchronize|tokenize|token_to_piece|vocab_n_tokens|vocab_mask|vocab_is_control)")
         .allowlist_var("LLAMA_.*")
         .derive_debug(false)
         .generate_comments(false)
@@ -77,6 +83,7 @@ fn build_native(manifest: &Path, source: &Path) {
         "include",
         "ggml",
         "vendor",
+        "tools/mtmd",
     ] {
         println!("cargo::rerun-if-changed={}", source.join(path).display());
     }
@@ -84,7 +91,9 @@ fn build_native(manifest: &Path, source: &Path) {
     build
         .define("LLAMA_SOURCE_DIR", source)
         .profile("Release")
-        .build_target("llama")
+        .build_target("mtmd")
+        .define("LLAMA_BUILD_MTMD", "ON")
+        .define("MTMD_VIDEO", "OFF")
         .define("CMAKE_POSITION_INDEPENDENT_CODE", "ON")
         .define("BUILD_SHARED_LIBS", "OFF")
         // GGML_STATIC also requests static GPU SDKs, which HIP does not support.
@@ -108,7 +117,6 @@ fn build_native(manifest: &Path, source: &Path) {
         "LLAMA_BUILD_EXAMPLES",
         "LLAMA_BUILD_SERVER",
         "LLAMA_BUILD_APP",
-        "LLAMA_BUILD_MTMD",
         "LLAMA_OPENSSL",
         "GGML_OPENMP",
         "GGML_OPENMP_FETCH",
@@ -128,6 +136,8 @@ fn build_native(manifest: &Path, source: &Path) {
     ] {
         build.define(option, "OFF");
     }
+    // CMake only detects GPU architectures when it first configures the compiler.
+    // Preserve its cached selection when the corresponding environment is unset.
     for variable in [
         "AMDGPU_TARGETS",
         "CMAKE_HIP_ARCHITECTURES",
@@ -138,10 +148,13 @@ fn build_native(manifest: &Path, source: &Path) {
         println!("cargo::rerun-if-env-changed={variable}");
         if let Some(value) = env::var_os(variable) {
             build.define(variable, value);
-        } else if variable == "AMDGPU_TARGETS" || variable.ends_with("_ARCHITECTURES") {
-            // Do not retain an architecture selected by a previous environment.
-            build.configure_arg(format!("-U{variable}"));
         }
+    }
+    // Resolve the HIP alias explicitly so a new target overrides an older cache.
+    if env::var_os("CMAKE_HIP_ARCHITECTURES").is_none()
+        && let Some(architectures) = env::var_os("AMDGPU_TARGETS")
+    {
+        build.define("CMAKE_HIP_ARCHITECTURES", architectures);
     }
     println!("cargo::rerun-if-env-changed=GGML_HIP_NO_VMM");
     build.define(

@@ -6,6 +6,7 @@ use std::path::PathBuf;
 #[derive(Clone, Debug)]
 pub struct ModelConfig {
     pub model: PathBuf,
+    pub mmproj: Option<PathBuf>,
     pub gpu_layers: i32,
     pub main_gpu: i32,
     pub context_size: u32,
@@ -18,6 +19,7 @@ impl ModelConfig {
     pub fn new(model: impl Into<PathBuf>) -> Self {
         Self {
             model: model.into(),
+            mmproj: None,
             gpu_layers: -1,
             main_gpu: 0,
             context_size: 4096,

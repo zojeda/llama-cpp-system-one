@@ -5,7 +5,7 @@ A Rust implementation of the System One API for structured question answering wi
 
 This independent learning project builds on the work at [codiv.ai](https://codiv.ai/). Credit goes to Codiv for the System One approach and API design, Google DeepMind for [DiffusionGemma](https://ai.google.dev/gemma/docs/diffusiongemma/model_card), and [llama.cpp](https://github.com/ggml-org/llama.cpp) contributors for native inference support. Rust handles request validation, prompt construction, and response mapping.
 
-Run structured questions with DiffusionGemma through llama.cpp on AMD ROCm/HIP hardware. Send a state and questions; get yes/no probabilities, choices, or rubric scores through the text System One API.
+Run structured questions with DiffusionGemma through llama.cpp on AMD ROCm/HIP hardware. Send a state and questions; get yes/no probabilities, choices, or rubric scores through the System One API. Image questions also require a compatible vision projector.
 
 ## The masked canvas
 
@@ -22,7 +22,7 @@ Canvas: Question 1       Question 2
 
 The brackets mark unknown answers. We fill those positions with seeded random vocabulary tokens, excluding the special mask token. After caching the prompt, we evaluate the whole canvas once. Bidirectional attention lets each slot use the surrounding canvas and prompt context. We read the logits at each slot and normalize them over its allowed answer codes.
 
-DiffusionGemma's full text generator refines a noisy canvas over multiple denoising steps. This service takes one read with fixed surrounding text and returns the answer distributions. See [diffusion and canvas inference](docs/inference.md) for the model explanation, a worked example, and the limits of these probabilities.
+DiffusionGemma's full text generator refines a noisy canvas over multiple denoising steps. By default, this service takes one read with fixed surrounding text and returns the answer distributions. Optional extensions add denoising steps, noise samples, a bounded thought, sequential question chunks, and images. See [diffusion and canvas inference](docs/inference.md) for the model explanation, a worked example, and the limits of these probabilities.
 
 ## Run
 
@@ -31,12 +31,21 @@ You need Rust 1.88+, a C/C++ compiler, CMake 3.24+, Make or Ninja, libclang, and
 ```bash
 git submodule update --init --recursive
 export DIFFUSION_MODEL="$HOME/models/diffusiongemma/diffusiongemma-26B-A4B-it-Q4_K_M.gguf"
+export DIFFUSION_MMPROJ="$HOME/models/diffusiongemma/mmproj-diffusiongemma-26b-a4b-f16.gguf"
 
 # CPU
 cargo run --release --locked -p llama-cpp-system-one -- --bind 127.0.0.1:8080
 
 # AMD GPU: after configuring ROCm/HIP
+export AMDGPU_TARGETS=gfx1151
 cargo run --release --locked -p llama-cpp-system-one --features hip,native -- --bind 127.0.0.1:8080
+
+```
+
+For images, start the service with a compatible projector (see [image setup](docs/build.md#image-input)):
+
+```bash
+cargo run --release --locked -p llama-cpp-system-one --features hip,native -- -m "$DIFFUSION_MODEL" --mmproj "$DIFFUSION_MMPROJ"
 ```
 
 Choose one server command. In another terminal:
@@ -49,7 +58,9 @@ curl http://127.0.0.1:8080/v1/systemone \
 
 The example asks three questions about a construction material. Set `TYPESAFE_API_KEY` on the server to enable bearer authentication, then add `-H "Authorization: Bearer $TYPESAFE_API_KEY"` to client calls. The default listener is `127.0.0.1:8080`.
 
-Use [JavaScript SDK examples](examples/javascript/README.md) for application code. The [API reference](docs/api.md) covers request types, model aliases, and errors. This version supports text requests with `steps=1`, `samples=1`, and `think=0`.
+Try the [hot dog photo example](docs/api.md#hot-dog-photo), including the [bundled JPEG](examples/hotdog.jpg), [ready-to-send request](examples/hotdog.json), and startup instructions for the vision projector.
+
+Use [JavaScript SDK examples](examples/javascript/README.md) for application code. The [API reference](docs/api.md) covers request types, model aliases, and errors. Use the [extensions](docs/api.md#extensions) for `steps`, `samples`, `think`, `sequential`, and `images`. Text defaults remain `steps=1`, `samples=1`, and `think=0`; image requests require `--mmproj` or `DIFFUSION_MMPROJ`.
 
 ## Benchmark
 

@@ -98,6 +98,7 @@ mod tests {
                 .collect(),
             prompt_tokens: 100,
             canvas_tokens: 20,
+            output_tokens: 0,
             seed: 42,
             forward_ms: 1.0,
         };

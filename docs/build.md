@@ -50,6 +50,8 @@ cargo run --release --locked -p llama-cpp-system-one --features hip,native -- --
 
 Adjust the SDK path, GPU target, and model path to your machine. Keep the runtime environment set in the shell that starts the service.
 
+If a build reports `HIP_ARCHITECTURES is empty for target "ggml-hip"`, export `AMDGPU_TARGETS=gfx1151` (or your GPU's architecture) and rerun the command. Earlier build scripts could delete CMake's saved architecture when the variable was unset. You do not need to clean the build directory. Subsequent builds keep the saved target; set `AMDGPU_TARGETS` again to change it. `CMAKE_HIP_ARCHITECTURES` takes precedence when both variables are set.
+
 ## CUDA
 
 Install the CUDA toolkit and driver, then select the target GPU architecture:
@@ -95,3 +97,13 @@ git add crates/llama-diffusion-sys/vendor/llama.cpp
 ```
 
 Update the SHA in this guide and commit the gitlink with the parent project. Keep integration changes in `crates/llama-diffusion-sys/cmake`, outside the submodule. After provisioning submodules and Cargo dependencies, you can build with `--offline`; build scripts do not fetch source code.
+
+## Image input
+
+Supply a vision-projector GGUF compatible with DiffusionGemma's Gemma 4 26B-A4B vision encoder and the text model's embedding width. The text GGUF alone cannot process images. Projectors and model weights are external assets and are never downloaded automatically.
+
+Set `DIFFUSION_MMPROJ=/path/to/mmproj.gguf` or pass `--mmproj /path/to/mmproj.gguf` to the server. The bundled build includes `mtmd` on CPU, HIP, and CUDA. The projector follows `--gpu-layers=0` for CPU execution; otherwise GPU use is enabled. Image encoding requests up to 280 patch tokens, with actual counts determined by the projector.
+
+The CMake wrapper applies image-prefill embedding scaling and attention changes to a generated copy of the pinned native model source. No submodule files are changed. External source builds must match the overlay's source patterns. External shared-library mode also requires `libmtmd` beside `libllama`; image projector loading is disabled in that mode because Cargo cannot verify that its DiffusionGemma prefill has the integration changes.
+
+Image decoder dependencies are Rust crates; WebP support does not require ffmpeg. See the [API examples](api.md#extensions) for payload formats and image limits.

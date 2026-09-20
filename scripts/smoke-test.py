@@ -61,7 +61,7 @@ def main():
             }
     assert response["usage"]["input_tokens"] > 0
     assert response["usage"]["output_tokens"] == 0
-    status, error = call("/v1/systemone", dict(request, steps=2))
+    status, error = call("/v1/systemone", dict(request, steps=9))
     assert status == 422 and isinstance(error["detail"], list), error
     status, error = call("/v1/systemone", dict(request, model="unknown-model"))
     assert status == 404 and error["detail"]["error_type"] == "not_found_error", error

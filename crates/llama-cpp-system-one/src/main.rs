@@ -4,10 +4,13 @@ use llama_diffusion_structured::ModelConfig;
 use std::{net::SocketAddr, path::PathBuf, sync::Arc};
 
 #[derive(Parser)]
-#[command(about = "A text System One API backed by one DiffusionGemma canvas forward")]
+#[command(about = "A System One API backed by DiffusionGemma structured reads")]
 struct Args {
     #[arg(short, long, env = "DIFFUSION_MODEL")]
     model: PathBuf,
+    /// Compatible DiffusionGemma vision projector; required for image requests.
+    #[arg(long, env = "DIFFUSION_MMPROJ")]
+    mmproj: Option<PathBuf>,
     #[arg(long, default_value = "127.0.0.1:8080")]
     bind: SocketAddr,
     #[arg(long, default_value = "gemmadiffusion-0.1")]
@@ -45,6 +48,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let listener = tokio::net::TcpListener::bind(args.bind).await?;
     let mut config = ModelConfig::new(args.model);
+    config.mmproj = args.mmproj;
     config.gpu_layers = args.gpu_layers;
     config.main_gpu = args.main_gpu;
     config.context_size = args.context_size;

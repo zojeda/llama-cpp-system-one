@@ -30,7 +30,7 @@ Or use `just js-install`, followed by `just js-example models`, `just js-example
 | --- | --- |
 | `models.mjs` | `client.models.list()` and the response request ID. Does not run inference. |
 | `system-one.mjs` | `noul`, `choice`, and `score` helpers in one request, with probabilities, confidence, usage, and a request ID. |
-| `errors.mjs` | Catching `UnprocessableEntityError` and inspecting the server's 422 validation details. Intentionally sends unsupported `steps=2`; exits successfully only when that request is rejected as expected. |
+| `errors.mjs` | Catching `UnprocessableEntityError` and inspecting the server's 422 validation details. Intentionally sends unsupported `steps=9`; exits successfully only when that request is rejected as expected. |
 
 ## Connection settings
 
@@ -52,6 +52,6 @@ Run `npm --prefix examples/javascript run benchmark` from the repository root to
 
 ## Local compatibility
 
-Use string, object, or array state; score rubrics must contain 2–10 strings. This server supports one text-only read, so omit extensions or use `steps=1`, `samples=1`, `think=0`, `sequential=false`, and no images. Scores are expected zero-based rubric levels, and confidence is normalized entropy rather than a calibrated probability of correctness.
+Use string, object, or array state; score rubrics must contain 2–10 strings. Omitting extensions uses `steps=1`, `samples=1`, `think=0`, and `sequential=false`. See the [extension API](../../docs/api.md#extensions) for multi-step reads, sampling, thoughts, sequential chunks, and image requests (which require a projector). Scores are expected zero-based rubric levels, and confidence is normalized entropy rather than a calibrated probability of correctness.
 
 See the SDK's [client options and types](https://github.com/typesafe-ai/typesafe-sdk-js/blob/v0.6.0/src/types.ts), [error classes](https://github.com/typesafe-ai/typesafe-sdk-js/blob/v0.6.0/src/errors.ts), and [response metadata](https://github.com/typesafe-ai/typesafe-sdk-js/blob/v0.6.0/src/api-promise.ts).

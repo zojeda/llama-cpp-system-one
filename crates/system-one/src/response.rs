@@ -58,7 +58,7 @@ impl Request {
             answers,
             usage: Usage {
                 input_tokens: read.prompt_tokens + read.canvas_tokens,
-                output_tokens: 0,
+                output_tokens: read.output_tokens,
             },
         })
     }
@@ -150,6 +150,7 @@ mod tests {
             slots: vec![],
             prompt_tokens: 1,
             canvas_tokens: 1,
+            output_tokens: 0,
             seed: 42,
             forward_ms: 0.0,
         };

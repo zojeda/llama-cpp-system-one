@@ -1,6 +1,8 @@
 //! Parse and validate requests before they reach inference.
 
 use crate::ValidationError;
+use base64::{Engine as _, engine::general_purpose::STANDARD};
+use llama_diffusion_structured::{ImageInput, ReadOptions};
 use serde_json::{Map, Value, json};
 
 #[derive(Clone, Debug)]
@@ -8,6 +10,8 @@ pub struct Request {
     pub(crate) model: String,
     pub(crate) state: Value,
     pub(crate) questions: Vec<(String, Question)>,
+    options: ReadOptions,
+    images: Vec<ImageInput>,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -42,6 +46,14 @@ fn content(value: &Value) -> bool {
 }
 
 impl Request {
+    pub fn options(&self) -> ReadOptions {
+        self.options
+    }
+
+    pub fn images(&self) -> &[ImageInput] {
+        &self.images
+    }
+
     pub fn model(&self) -> &str {
         &self.model
     }
@@ -79,28 +91,49 @@ impl Request {
                     "value_error",
                 )
             })?;
-        for (key, option) in object {
-            let supported = match key.as_str() {
-                "state" | "model" | "questions" => true,
-                "steps" | "samples" => option.is_null() || option.as_u64() == Some(1),
-                "think" => option.is_null() || option.as_u64() == Some(0),
-                "sequential" => option.is_null() || option.as_bool() == Some(false),
-                "images" => option.is_null() || option.as_array().is_some_and(Vec::is_empty),
-                _ => {
-                    return Err(ValidationError::new(
-                        &["body", key],
-                        "Unknown field",
-                        "extra_forbidden",
-                    ));
-                }
-            };
-            if !supported {
+        for key in object.keys() {
+            if ![
+                "state",
+                "model",
+                "questions",
+                "steps",
+                "samples",
+                "think",
+                "sequential",
+                "images",
+            ]
+            .contains(&key.as_str())
+            {
                 return Err(ValidationError::new(
                     &["body", key],
-                    "This service supports one text-only read: steps=1, samples=1, think=0, sequential=false, and no images",
-                    "value_error",
+                    "Unknown field",
+                    "extra_forbidden",
                 ));
             }
+        }
+        let options = ReadOptions {
+            steps: integer_option(object, "steps", 1, 1, 8)?,
+            samples: integer_option(object, "samples", 1, 1, 32)?,
+            think: integer_option(object, "think", 0, 0, 4096)?,
+            sequential: match object.get("sequential").filter(|v| !v.is_null()) {
+                None => false,
+                Some(value) => value.as_bool().ok_or_else(|| {
+                    ValidationError::new(&["body", "sequential"], "Expected a boolean", "bool_type")
+                })?,
+            },
+        };
+        let images = parse_images(object.get("images"))?;
+        if !images.is_empty() && (options.think > 0 || options.sequential) {
+            let key = if options.think > 0 {
+                "think"
+            } else {
+                "sequential"
+            };
+            return Err(ValidationError::new(
+                &["body", key],
+                "Cannot combine this option with images",
+                "value_error",
+            ));
         }
         let questions = questions
             .iter()
@@ -110,8 +143,95 @@ impl Request {
             model,
             state: state.clone(),
             questions,
+            options,
+            images,
         })
     }
+}
+
+fn integer_option(
+    object: &Map<String, Value>,
+    key: &str,
+    default: usize,
+    min: usize,
+    max: usize,
+) -> Result<usize, ValidationError> {
+    match object.get(key).filter(|v| !v.is_null()) {
+        None => Ok(default),
+        Some(value) => value
+            .as_u64()
+            .filter(|v| (*v >= min as u64) && (*v <= max as u64))
+            .map(|v| v as usize)
+            .ok_or_else(|| {
+                ValidationError::new(
+                    &["body", key],
+                    format!("Expected an integer from {min} to {max}"),
+                    "value_error",
+                )
+            }),
+    }
+}
+
+fn parse_images(value: Option<&Value>) -> Result<Vec<ImageInput>, ValidationError> {
+    let Some(value) = value.filter(|v| !v.is_null()) else {
+        return Ok(Vec::new());
+    };
+    let error = |message: &str| ValidationError::new(&["body", "images"], message, "value_error");
+    let images = value
+        .as_array()
+        .filter(|v| v.len() <= 8)
+        .ok_or_else(|| error("Expected at most 8 images"))?;
+    images
+        .iter()
+        .map(|value| {
+            let (mime, encoded) = if let Some(url) = value.as_str() {
+                url.strip_prefix("data:")
+                    .and_then(|s| s.split_once(";base64,"))
+                    .ok_or_else(|| error("Expected a base64 image data URL"))?
+            } else {
+                let object = value
+                    .as_object()
+                    .ok_or_else(|| error("Expected an image data URL or object"))?;
+                if object.keys().any(|k| k != "content_type" && k != "base64") {
+                    return Err(error("Unknown image field"));
+                }
+                (
+                    object
+                        .get("content_type")
+                        .and_then(Value::as_str)
+                        .ok_or_else(|| error("Missing image content_type"))?,
+                    object
+                        .get("base64")
+                        .and_then(Value::as_str)
+                        .ok_or_else(|| error("Missing image base64"))?,
+                )
+            };
+            if !["image/jpeg", "image/png", "image/webp", "image/gif"].contains(&mime) {
+                return Err(error("Supported image types: JPEG, PNG, WebP, GIF"));
+            }
+            const MAX_BYTES: usize = 5 * 1024 * 1024;
+            if encoded.len() > MAX_BYTES.div_ceil(3) * 4 {
+                return Err(error("Image exceeds 5 MiB"));
+            }
+            let bytes = STANDARD
+                .decode(encoded)
+                .map_err(|_| error("Invalid image base64"))?;
+            if bytes.is_empty() || bytes.len() > MAX_BYTES {
+                return Err(error("Image must contain 1 to 5 MiB of data"));
+            }
+            let matches = match mime {
+                "image/png" => bytes.starts_with(b"\x89PNG\r\n\x1a\n"),
+                "image/jpeg" => bytes.starts_with(b"\xff\xd8\xff"),
+                "image/gif" => bytes.starts_with(b"GIF87a") || bytes.starts_with(b"GIF89a"),
+                "image/webp" => bytes.starts_with(b"RIFF") && bytes.get(8..12) == Some(b"WEBP"),
+                _ => false,
+            };
+            if !matches {
+                return Err(error("Image content does not match its content_type"));
+            }
+            Ok(ImageInput { bytes })
+        })
+        .collect()
 }
 
 impl Question {
@@ -247,20 +367,90 @@ mod tests {
     }
 
     #[test]
-    fn unsupported_extensions_are_never_silently_ignored() {
-        for (key, unsupported, supported) in [
-            ("steps", json!(2), json!(1)),
-            ("samples", json!(2), json!(1)),
-            ("think", json!(8), json!(0)),
-            ("sequential", json!(true), json!(false)),
-            ("images", json!(["image"]), json!([])),
+    fn extension_ranges_and_types_are_validated() {
+        for (key, valid, invalid) in [
+            (
+                "steps",
+                vec![json!(1), json!(8)],
+                vec![json!(0), json!(9), json!(1.5)],
+            ),
+            (
+                "samples",
+                vec![json!(1), json!(32)],
+                vec![json!(0), json!(33)],
+            ),
+            (
+                "think",
+                vec![json!(0), json!(4096)],
+                vec![json!(-1), json!(4097)],
+            ),
+            (
+                "sequential",
+                vec![json!(true), json!(false)],
+                vec![json!(1)],
+            ),
+        ] {
+            for option in valid.into_iter().chain([Value::Null]) {
+                let mut value = base();
+                value[key] = option;
+                assert!(Request::parse(value).is_ok());
+            }
+            for option in invalid.into_iter().chain([json!("1")]) {
+                let mut value = base();
+                value[key] = option;
+                assert_eq!(
+                    Request::parse(value).unwrap_err().loc,
+                    vec![json!("body"), json!(key)]
+                );
+            }
+        }
+        let defaults = Request::parse(base()).unwrap().options();
+        assert_eq!(
+            (
+                defaults.steps,
+                defaults.samples,
+                defaults.think,
+                defaults.sequential
+            ),
+            (1, 1, 0, false)
+        );
+    }
+
+    #[test]
+    fn images_accept_both_wire_formats_and_reject_bad_payloads_and_combinations() {
+        let png = STANDARD.encode(b"\x89PNG\r\n\x1a\n");
+        for image in [
+            json!(format!("data:image/png;base64,{png}")),
+            json!({"content_type":"image/png", "base64":png}),
         ] {
             let mut value = base();
-            value[key] = unsupported;
-            assert!(Request::parse(value.clone()).is_err());
-            value[key] = supported;
-            assert!(Request::parse(value).is_ok());
+            value["images"] = json!([image]);
+            assert_eq!(
+                Request::parse(value.clone()).unwrap().images()[0].bytes,
+                b"\x89PNG\r\n\x1a\n"
+            );
+            for (key, option) in [("think", json!(1)), ("sequential", json!(true))] {
+                let mut bad = value.clone();
+                bad[key] = option;
+                assert!(Request::parse(bad).is_err());
+            }
         }
+        for images in [
+            json!(["https://example.com/a.png"]),
+            json!(["data:image/png;base64,!!!"]),
+            json!(["data:image/svg+xml;base64,QQ=="]),
+            json!(["data:image/png;base64,QQ=="]),
+            json!(["data:image/png;base64,"]),
+            json!(vec!["x"; 9]),
+            json!(false),
+        ] {
+            let mut value = base();
+            value["images"] = images;
+            assert!(Request::parse(value).is_err());
+        }
+        let mut value = base();
+        value["images"] = json!([format!("data:image/png;base64,{}", "A".repeat(7_000_000))]);
+        assert!(Request::parse(value).is_err());
     }
 
     #[test]

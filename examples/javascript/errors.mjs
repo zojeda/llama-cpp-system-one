@@ -2,13 +2,13 @@ import { UnprocessableEntityError, noul } from "@typesafe-ai/sdk";
 import { client } from "./client.mjs";
 
 try {
-  // The SDK forwards extensions, but this server accepts only a single read.
+  // The SDK forwards extensions; steps above eight fail validation.
   await client.systemOne({
     state: "Ground granulated blast furnace slag is used in concrete.",
     questions: { is_scm: noul("Is the material an SCM?") },
-    steps: 2,
+    steps: 9,
   });
-  throw new Error("Expected this server to reject steps=2 with HTTP 422");
+  throw new Error("Expected this server to reject steps=9 with HTTP 422");
 } catch (error) {
   if (!(error instanceof UnprocessableEntityError)) {
     throw error;

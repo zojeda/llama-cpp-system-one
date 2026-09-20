@@ -84,19 +84,21 @@ fn evaluate(
             "value_error",
         ))
     })?;
-    let read = engine.read(&input, seed).map_err(|error| match error {
-        Error::InvalidInput(message) => {
-            ApiError::from(ValidationError::new(&["body"], message, "value_error"))
-        }
-        other => {
-            tracing::error!(error = %other, "Inference failed");
-            ApiError::new(
-                StatusCode::INTERNAL_SERVER_ERROR,
-                "internal_error",
-                "Inference failed",
-            )
-        }
-    })?;
+    let read = engine
+        .read_with_options(&input, seed, request.options(), request.images())
+        .map_err(|error| match error {
+            Error::InvalidInput(message) => {
+                ApiError::from(ValidationError::new(&["body"], message, "value_error"))
+            }
+            other => {
+                tracing::error!(error = %other, "Inference failed");
+                ApiError::new(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "internal_error",
+                    "Inference failed",
+                )
+            }
+        })?;
     tracing::info!(
         prompt_tokens = read.prompt_tokens,
         canvas_tokens = read.canvas_tokens,

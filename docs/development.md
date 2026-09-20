@@ -17,7 +17,7 @@ Keep handwritten unsafe code in [`native.rs`](../crates/llama-diffusion-structur
 
 | Crate | Modules |
 | --- | --- |
-| `llama-diffusion-structured` | `config`, `read`, `engine`, `probability`, `native`, `error` |
+| `llama-diffusion-structured` | `config`, `read`, `engine`, `denoise`, `images`, `probability`, `native`, `error` |
 | `system-one` | `request`, `compiler`, `response`, `error` |
 | `llama-cpp-system-one` | `http`, `handlers`, `middleware`, `worker`, `error` |
 
@@ -42,7 +42,7 @@ cargo test -p llama-diffusion-structured --locked --features hip,native \
 
 Use `--features cuda` for NVIDIA or omit GPU features for CPU. Do not use `--all-features`; HIP and CUDA are alternative backends. Against a running service, run `python3 scripts/smoke-test.py` with the server's `TYPESAFE_API_KEY` if configured.
 
-Regular tests cover validation, probability math, error mapping, model aliases, request IDs, and queue behavior. The ignored native test checks reproducibility across requests using a real model.
+Regular tests cover validation, probability math, error mapping, model aliases, request IDs, and queue behavior. The ignored native tests check reproducibility, extension behavior, and image prefill using real assets. Run `native_extensions_average_refine_think_and_chunk` with `DIFFUSION_MODEL`. Run `native_images_prefill_and_preserve_text_reproducibility` with both `DIFFUSION_MODEL` and `DIFFUSION_MMPROJ`. Use `-- --ignored --nocapture` and the appropriate backend features for each.
 
 ## Recipes
 
