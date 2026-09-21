@@ -147,6 +147,8 @@ mod tests {
         }))
         .unwrap();
         let mut read = ReadResult {
+            traces: vec![],
+            profile: None,
             slots: vec![],
             prompt_tokens: 1,
             canvas_tokens: 1,

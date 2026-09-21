@@ -1,0 +1,7 @@
+{
+  "legacy_think1024": {
+    "compile": false,
+    "options": {"think": 1024},
+    "layout": {"capture_trace": true}
+  }
+}

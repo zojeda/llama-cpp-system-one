@@ -1,0 +1,114 @@
+{
+  "source_run": "benchmarks/results/research-precision-original-q4",
+  "scope": "32 fixed development cases per arm, original Q4, seed 42, context 8192, default attention; in-process diagnostic timings, not final HTTP latency",
+  "arms": {
+    "legacy": {
+      "cases": 32,
+      "wall_total_ms": 57521.000164,
+      "phase_totals": {
+        "prefill_ms": 53186.646635,
+        "decode_ms": 4139.52541,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "median": {
+        "prefill_ms": 665.9453295000001,
+        "decode_ms": 110.2362975,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 1.0
+      },
+      "share_of_wall_percent": {
+        "prefill_ms": 92.46474588994944,
+        "decode_ms": 7.1965463016944495,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0
+      }
+    },
+    "prefill": {
+      "cases": 32,
+      "wall_total_ms": 60752.205691,
+      "phase_totals": {
+        "prefill_ms": 56244.544205,
+        "decode_ms": 4307.013994,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "median": {
+        "prefill_ms": 746.6047100000001,
+        "decode_ms": 115.115252,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 1.0
+      },
+      "share_of_wall_percent": {
+        "prefill_ms": 92.58025048682671,
+        "decode_ms": 7.089477567129801,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0
+      }
+    },
+    "context_legacy": {
+      "cases": 32,
+      "wall_total_ms": 57250.232791999995,
+      "phase_totals": {
+        "prefill_ms": 53040.45362,
+        "decode_ms": 4011.995893,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "median": {
+        "prefill_ms": 688.3708845,
+        "decode_ms": 107.0561345,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 1.0
+      },
+      "share_of_wall_percent": {
+        "prefill_ms": 92.64670383560735,
+        "decode_ms": 7.007824592742313,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0
+      }
+    },
+    "context_openjev": {
+      "cases": 32,
+      "wall_total_ms": 66582.207883,
+      "phase_totals": {
+        "prefill_ms": 62099.272071,
+        "decode_ms": 4288.917666,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "median": {
+        "prefill_ms": 962.7660894999999,
+        "decode_ms": 118.706261,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 1.0
+      },
+      "share_of_wall_percent": {
+        "prefill_ms": 93.26706645132957,
+        "decode_ms": 6.441537164908378,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0
+      }
+    }
+  }
+}

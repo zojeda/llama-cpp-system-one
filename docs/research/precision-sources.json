@@ -1,0 +1,162 @@
+{
+  "repository": "https://huggingface.co/unsloth/diffusiongemma-26B-A4B-it-GGUF",
+  "revision": "f4183a2c7a354128d02545752303c4354d165bf0",
+  "base_model": "google/diffusiongemma-26B-A4B-it",
+  "files": [
+    {
+      "rfilename": "diffusiongemma-26B-A4B-it-BF16.gguf",
+      "blobId": "e478282ab59698f432ca0d7d050633b8e9bccaf1",
+      "size": 50540834400,
+      "lfs": {
+        "sha256": "f2820bac05ab7e66836390afa575b2c8883cdb80804a52e3ed59b3e608713205",
+        "size": 50540834400,
+        "pointerSize": 136
+      }
+    },
+    {
+      "rfilename": "diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "blobId": "7bcc3ef53368a06a1d3bc0643f148fdceb2a24af",
+      "size": 16806810208,
+      "lfs": {
+        "sha256": "24523b6c833c9ce9f5f34f9b333ab1517d73d6f1e76a103645353114c8028bc5",
+        "size": 16806810208,
+        "pointerSize": 136
+      }
+    },
+    {
+      "rfilename": "diffusiongemma-26B-A4B-it-Q8_0.gguf",
+      "blobId": "d0eea599cc19e9fc2dc4f18e1c95b6f4088d3a65",
+      "size": 26878831200,
+      "lfs": {
+        "sha256": "dd43baf2fb49a842ea7c106a7f3ce8d2e862e7d28d798d1d86bf94b48e50a607",
+        "size": 26878831200,
+        "pointerSize": 136
+      }
+    }
+  ],
+  "note": "Publisher does not pin source checkpoint/converter in model card. Verify local Q4 hash; compare Q8 with Q4 requantized from that exact Q8 to control conversion lineage. This measures additional loss from Q8 to Q4, not total loss from BF16.",
+  "verified_local_q4_sha256": "24523b6c833c9ce9f5f34f9b333ab1517d73d6f1e76a103645353114c8028bc5",
+  "verified_local_q8_sha256": "dd43baf2fb49a842ea7c106a7f3ce8d2e862e7d28d798d1d86bf94b48e50a607",
+  "q8_size_bytes": 26878831200,
+  "published_q4_q8_tokenizer_metadata_differences": [
+    "tokenizer.ggml.token_type"
+  ],
+  "q4_tokenizer_value_sha256": {
+    "tokenizer.ggml.model": "ec0b3ce5cfebdaf7c87f1b2d4e4769ad550a8d817e3053bf50d79e8c23e0c1f0",
+    "tokenizer.ggml.tokens": "5dee95a61b43a64fcd6e243f548755b04c3fb97c7939dc1143e0f5ab0d3cdf95",
+    "tokenizer.ggml.scores": "d20b88ad6705b95c54de5d8ac8008139b5a86b2d5a4fa0b4b813d676acbfd029",
+    "tokenizer.ggml.token_type": "2b25f7ac4130eb07c9d2bc7ad95d8409c4139ae5f21af079664f76c7c87ecfb0",
+    "tokenizer.ggml.merges": "33e5a4f6482eb5cddda32a03d5e34d89427ce5bca12b5e6ee0a5312e683cdf29",
+    "tokenizer.ggml.bos_token_id": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece",
+    "tokenizer.ggml.eos_token_id": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450",
+    "tokenizer.ggml.unknown_token_id": "9d9f290527a6be626a8f5985b26e19b237b44872b03631811df4416fc1713178",
+    "tokenizer.ggml.padding_token_id": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+    "tokenizer.ggml.mask_token_id": "fb5e512425fc9449316ec95969ebe71e2d576dbab833d61e2a5b9330fd70ee02",
+    "tokenizer.ggml.add_space_prefix": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+    "tokenizer.ggml.add_bos_token": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+    "tokenizer.chat_template": "fa3c9c468f53e37a705f77f9489fb240112f2f870fb32255e727efcbd8f20513"
+  },
+  "q8_tokenizer_value_sha256": {
+    "tokenizer.ggml.model": "ec0b3ce5cfebdaf7c87f1b2d4e4769ad550a8d817e3053bf50d79e8c23e0c1f0",
+    "tokenizer.ggml.tokens": "5dee95a61b43a64fcd6e243f548755b04c3fb97c7939dc1143e0f5ab0d3cdf95",
+    "tokenizer.ggml.scores": "d20b88ad6705b95c54de5d8ac8008139b5a86b2d5a4fa0b4b813d676acbfd029",
+    "tokenizer.ggml.token_type": "d36e9067ad9adb544ce6cedb5e4b382368e9ae0129e16a1c2313d8e06324e7a9",
+    "tokenizer.ggml.merges": "33e5a4f6482eb5cddda32a03d5e34d89427ce5bca12b5e6ee0a5312e683cdf29",
+    "tokenizer.ggml.bos_token_id": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece",
+    "tokenizer.ggml.eos_token_id": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450",
+    "tokenizer.ggml.unknown_token_id": "9d9f290527a6be626a8f5985b26e19b237b44872b03631811df4416fc1713178",
+    "tokenizer.ggml.padding_token_id": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+    "tokenizer.ggml.mask_token_id": "fb5e512425fc9449316ec95969ebe71e2d576dbab833d61e2a5b9330fd70ee02",
+    "tokenizer.ggml.add_space_prefix": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+    "tokenizer.ggml.add_bos_token": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+    "tokenizer.chat_template": "fa3c9c468f53e37a705f77f9489fb240112f2f870fb32255e727efcbd8f20513"
+  },
+  "q4_tensor_type_counts": {
+    "0": 423,
+    "6": 33,
+    "12": 194,
+    "14": 14,
+    "8": 28
+  },
+  "q8_tensor_type_counts": {
+    "0": 423,
+    "8": 269
+  },
+  "token_type_differences": [
+    {
+      "id": 48,
+      "token": "<|tool_call>",
+      "q4_type": 4,
+      "q8_type": 3
+    },
+    {
+      "id": 49,
+      "token": "<tool_call|>",
+      "q4_type": 4,
+      "q8_type": 3
+    },
+    {
+      "id": 50,
+      "token": "<|tool_response>",
+      "q4_type": 4,
+      "q8_type": 3
+    },
+    {
+      "id": 51,
+      "token": "<tool_response|>",
+      "q4_type": 4,
+      "q8_type": 3
+    },
+    {
+      "id": 52,
+      "token": "<|\"|>",
+      "q4_type": 4,
+      "q8_type": 3
+    },
+    {
+      "id": 100,
+      "token": "<|channel>",
+      "q4_type": 4,
+      "q8_type": 3
+    },
+    {
+      "id": 101,
+      "token": "<channel|>",
+      "q4_type": 4,
+      "q8_type": 3
+    },
+    {
+      "id": 203,
+      "token": "<s>",
+      "q4_type": 1,
+      "q8_type": 3
+    },
+    {
+      "id": 212,
+      "token": "</s>",
+      "q4_type": 1,
+      "q8_type": 3
+    }
+  ],
+  "public_tasks_containing_changed_token_literals": [],
+  "derived_q4": {
+    "file": "research-from-Q8-Q4_K_M.gguf",
+    "size_bytes": 16806810208,
+    "sha256": "c26e504dcf7bfc3a89bc954a0e61ea1c08f0e6e93d7c99a00b730726084ec4da",
+    "source_sha256": "dd43baf2fb49a842ea7c106a7f3ce8d2e862e7d28d798d1d86bf94b48e50a607",
+    "tokenizer_metadata_identical_to_q8": true,
+    "tensor_type_counts": {
+      "0": 423,
+      "6": 33,
+      "12": 194,
+      "14": 14,
+      "8": 28
+    },
+    "converter_commit": "12e0a9627d02c6395fd4bbf2aadff93d0d46a0e4",
+    "ftype": "Q4_K_M",
+    "allow_requantize": true,
+    "threads": 8,
+    "max_buf_size": 536870912,
+    "fallback_tensor_count": 61
+  }
+}

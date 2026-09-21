@@ -1,0 +1,69 @@
+{
+  "legacy": {
+    "compile": false
+  },
+  "empty_thought_prefill": {
+    "layout": {
+      "prefill_suffix": "<|channel>thought\n<channel|>",
+      "capture_trace": true
+    }
+  },
+  "prefill_samples4": {
+    "options": {"samples": 4},
+    "layout": {
+      "prefill_suffix": "<|channel>thought\n<channel|>",
+      "capture_trace": true
+    }
+  },
+  "prefill_adaptive": {
+    "layout": {
+      "prefill_suffix": "<|channel>thought\n<channel|>",
+      "adaptive_samples": true,
+      "capture_trace": true
+    }
+  },
+  "prefill_steps2": {
+    "options": {"steps": 2},
+    "layout": {
+      "prefill_suffix": "<|channel>thought\n<channel|>",
+      "capture_trace": true
+    }
+  },
+  "prefill_steps4": {
+    "options": {"steps": 4},
+    "layout": {
+      "prefill_suffix": "<|channel>thought\n<channel|>",
+      "capture_trace": true
+    }
+  },
+  "legacy_think1024": {
+    "options": {
+      "think": 1024
+    },
+    "layout": {
+      "capture_trace": true
+    }
+  },
+  "legacy_think1024_marker": {
+    "options": {
+      "think": 1024
+    },
+    "layout": {
+      "system_prompt": "",
+      "thinking_marker": true,
+      "capture_trace": true
+    }
+  },
+  "openjev_think1024_marker": {
+    "openjev_wording": true,
+    "options": {
+      "think": 1024
+    },
+    "layout": {
+      "thinking_marker": true,
+      "canvas_suffix": "<turn|>",
+      "pad_to": 16,
+      "capture_trace": true
+    }
+  }
+}

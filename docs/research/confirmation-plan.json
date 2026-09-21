@@ -1,0 +1,12 @@
+{
+  "legacy": {"compile": false},
+  "prefill": {
+    "layout": {"prefill_suffix": "<|channel>thought\n<channel|>"}
+  },
+  "canvas": {
+    "layout": {"canvas_prefix": "<|channel>thought\n<channel|>"}
+  },
+  "context_legacy": {
+    "layout": {"contextual_tokens": true}
+  }
+}

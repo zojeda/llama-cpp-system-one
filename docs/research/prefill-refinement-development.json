@@ -1,0 +1,108 @@
+{
+  "source_run": "benchmarks/results/research-thinking",
+  "scope": "Completed 32-case arms from an completed nine-arm run; seed 42, original Q4, context 8192. Public development sample; not full-set confirmation.",
+  "arms": {
+    "prefill_samples4": {
+      "correct": 26,
+      "valid": 32,
+      "fixed_ids": [],
+      "regressed_ids": [
+        "hard-opus-a-probability-08"
+      ],
+      "actual_reads_histogram": {
+        "4": 32
+      },
+      "probability_vectors_equal_to_samples4": null,
+      "arm": "prefill_samples4",
+      "seed": 42,
+      "total": 32,
+      "p50_s": 1.3306523160000001,
+      "p95_s": 9.67844369455,
+      "valid_p50_s": 1.3306523160000001,
+      "valid_p95_s": 9.67844369455,
+      "decode_calls_histogram": {
+        "4": 32
+      }
+    },
+    "prefill_adaptive": {
+      "correct": 26,
+      "valid": 32,
+      "fixed_ids": [],
+      "regressed_ids": [
+        "hard-opus-a-probability-08"
+      ],
+      "actual_reads_histogram": {
+        "4": 32
+      },
+      "probability_vectors_equal_to_samples4": 32,
+      "arm": "prefill_adaptive",
+      "seed": 42,
+      "total": 32,
+      "p50_s": 1.3450983939999999,
+      "p95_s": 9.19468350585,
+      "valid_p50_s": 1.3450983939999999,
+      "valid_p95_s": 9.19468350585,
+      "decode_calls_histogram": {
+        "4": 32
+      }
+    },
+    "prefill_steps2": {
+      "arm": "prefill_steps2",
+      "seed": 42,
+      "total": 32,
+      "correct": 27,
+      "valid": 32,
+      "p50_s": 1.0712315415,
+      "p95_s": 8.68115546725,
+      "valid_p50_s": 1.0712315415,
+      "valid_p95_s": 8.68115546725,
+      "fixed_ids": [
+        "hard-opus-a-long_policy-13"
+      ],
+      "regressed_ids": [
+        "hard-opus-a-probability-08"
+      ],
+      "actual_reads_histogram": {
+        "1": 32
+      },
+      "decode_calls_histogram": {
+        "2": 32
+      }
+    },
+    "prefill_steps4": {
+      "arm": "prefill_steps4",
+      "seed": 42,
+      "total": 32,
+      "correct": 24,
+      "valid": 32,
+      "p50_s": 1.3004108145,
+      "p95_s": 9.0723079834,
+      "valid_p50_s": 1.3004108145,
+      "valid_p95_s": 9.0723079834,
+      "fixed_ids": [],
+      "regressed_ids": [
+        "original-adequacy-05-1",
+        "hard-opus-a-probability-08",
+        "hard-opus-b-ambiguous-03"
+      ],
+      "actual_reads_histogram": {
+        "1": 32
+      },
+      "decode_calls_histogram": {
+        "4": 32
+      }
+    }
+  },
+  "control": {
+    "arm": "empty_thought_prefill",
+    "seed": 42,
+    "total": 32,
+    "correct": 27,
+    "valid": 32,
+    "p50_s": 1.0487954685,
+    "p95_s": 8.185793097949999,
+    "valid_p50_s": 1.0487954685,
+    "valid_p95_s": 8.185793097949999
+  },
+  "run_complete": true
+}

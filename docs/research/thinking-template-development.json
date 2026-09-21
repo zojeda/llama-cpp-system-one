@@ -1,0 +1,180 @@
+{
+  "source_run": "benchmarks/results/research-thinking",
+  "run_complete": true,
+  "scope": "Completed 32-case development arms in the nine-arm thinking/refinement run; Q4, seed 42, context 8192. Generated thinking capped at 1024 tokens. No full-set or unseen-set accuracy claim.",
+  "control": {
+    "arm": "empty_thought_prefill",
+    "seed": 42,
+    "total": 32,
+    "correct": 27,
+    "valid": 32,
+    "p50_s": 1.0487954685,
+    "p95_s": 8.185793097949999,
+    "valid_p50_s": 1.0487954685,
+    "valid_p95_s": 8.185793097949999,
+    "over_120s_ids": []
+  },
+  "arms": {
+    "legacy_think1024_marker": {
+      "layout": {
+        "options": {
+          "think": 1024
+        },
+        "layout": {
+          "system_prompt": "",
+          "thinking_marker": true,
+          "capture_trace": true
+        }
+      },
+      "summary": {
+        "arm": "legacy_think1024_marker",
+        "seed": 42,
+        "total": 32,
+        "correct": 30,
+        "valid": 32,
+        "p50_s": 54.820069622999995,
+        "p95_s": 343.82188531894997,
+        "valid_p50_s": 54.820069622999995,
+        "valid_p95_s": 343.82188531894997,
+        "over_120s_ids": [
+          "hard-opus-a-long_policy-09",
+          "hard-opus-a-long_policy-13",
+          "hard-opus-a-probability-08",
+          "hard-opus-a-temporal_numeric-12",
+          "hard-opus-b-ambiguous-03",
+          "hard-opus-b-multi_hop-05",
+          "hard-opus-b-tradeoff-07",
+          "hard-opus-c-long_policy-08",
+          "hard-sol-b-temporal_numeric-03"
+        ]
+      },
+      "paired_against_prefill": {
+        "total": 32,
+        "reference_correct": 27,
+        "candidate_correct": 30,
+        "reference_valid": 32,
+        "candidate_valid": 32,
+        "delta_percentage_points": 9.375,
+        "fixed_ids": [
+          "hard-opus-b-tradeoff-07",
+          "hard-opus-c-long_policy-08",
+          "hard-sol-b-temporal_numeric-03"
+        ],
+        "regressed_ids": [],
+        "mcnemar_exact_unadjusted_p": 0.25,
+        "trace_pairs_audited": 32,
+        "trace_pairs_differing": 32
+      },
+      "output_tokens": {
+        "min": 96,
+        "median": 243.5,
+        "max": 1024,
+        "at_1024_cap_ids": [
+          "hard-opus-a-long_policy-13",
+          "hard-opus-a-probability-08",
+          "hard-opus-a-temporal_numeric-12",
+          "hard-opus-c-long_policy-08"
+        ]
+      },
+      "over_120s_count": 9,
+      "correct_and_at_most_120s": 23,
+      "deadline_note": "Measured in-process durations only. This is not a simulated HTTP score; HTTP client timeouts and queued work were not exercised.",
+      "phase_totals": {
+        "prefill_ms": 1069378.732738,
+        "decode_ms": 1295568.795812,
+        "logits_copy_ms": 121127.07924,
+        "sampling_ms": 726642.561471,
+        "entropy_ms": 0.0,
+        "decode_calls": 2741
+      },
+      "share_of_wall_percent": {
+        "prefill_ms": 33.05204201454074,
+        "decode_ms": 40.04305767543018,
+        "logits_copy_ms": 3.743759988464208,
+        "sampling_ms": 22.458853665249773,
+        "entropy_ms": 0.0
+      }
+    },
+    "openjev_think1024_marker": {
+      "layout": {
+        "openjev_wording": true,
+        "options": {
+          "think": 1024
+        },
+        "layout": {
+          "thinking_marker": true,
+          "canvas_suffix": "<turn|>",
+          "pad_to": 16,
+          "capture_trace": true
+        }
+      },
+      "summary": {
+        "arm": "openjev_think1024_marker",
+        "seed": 42,
+        "total": 32,
+        "correct": 29,
+        "valid": 32,
+        "p50_s": 35.15632473,
+        "p95_s": 344.05104666324996,
+        "valid_p50_s": 35.15632473,
+        "valid_p95_s": 344.05104666324996,
+        "over_120s_ids": [
+          "hard-opus-a-long_policy-09",
+          "hard-opus-a-long_policy-13",
+          "hard-opus-a-probability-08",
+          "hard-opus-a-temporal_numeric-12",
+          "hard-opus-b-multi_hop-05",
+          "hard-opus-b-tradeoff-07",
+          "hard-opus-c-long_policy-08"
+        ]
+      },
+      "paired_against_prefill": {
+        "total": 32,
+        "reference_correct": 27,
+        "candidate_correct": 29,
+        "reference_valid": 32,
+        "candidate_valid": 32,
+        "delta_percentage_points": 6.25,
+        "fixed_ids": [
+          "hard-opus-a-long_policy-13",
+          "hard-opus-b-tradeoff-07",
+          "hard-sol-b-temporal_numeric-03"
+        ],
+        "regressed_ids": [
+          "hard-opus-a-probability-08"
+        ],
+        "mcnemar_exact_unadjusted_p": 0.625,
+        "trace_pairs_audited": 32,
+        "trace_pairs_differing": 32
+      },
+      "output_tokens": {
+        "min": 97,
+        "median": 177.0,
+        "max": 1024,
+        "at_1024_cap_ids": [
+          "hard-opus-a-probability-08",
+          "hard-opus-a-temporal_numeric-12",
+          "hard-opus-c-long_policy-08"
+        ]
+      },
+      "over_120s_count": 7,
+      "correct_and_at_most_120s": 25,
+      "deadline_note": "Measured in-process durations only. This is not a simulated HTTP score; HTTP client timeouts and queued work were not exercised.",
+      "phase_totals": {
+        "prefill_ms": 1056258.698198,
+        "decode_ms": 1052268.846684,
+        "logits_copy_ms": 98510.20030099999,
+        "sampling_ms": 556947.8777600001,
+        "entropy_ms": 0.0,
+        "decode_calls": 2164
+      },
+      "share_of_wall_percent": {
+        "prefill_ms": 37.96259923731769,
+        "decode_ms": 37.81920147472337,
+        "logits_copy_ms": 3.54051830408097,
+        "sampling_ms": 20.017055590214994,
+        "entropy_ms": 0.0
+      }
+    }
+  }
+}

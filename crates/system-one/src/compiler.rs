@@ -101,6 +101,8 @@ mod tests {
             output_tokens: 0,
             seed: 42,
             forward_ms: 1.0,
+            traces: vec![],
+            profile: None,
         };
         let result = serde_json::to_value(request.response("local-model", &read).unwrap()).unwrap();
         assert_eq!(result["answers"]["private_id_yes"]["noul"], 0.8);

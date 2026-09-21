@@ -1,0 +1,302 @@
+{
+  "reference_run": "benchmarks/results/research-precision-original-q4",
+  "reference_arm": "context_legacy",
+  "candidate_run": "benchmarks/results/research-flash-attention",
+  "candidate_arm": "context_legacy",
+  "note": "Each seed is reported separately; repeated tasks are not independent samples. P values are exploratory and unadjusted for arm selection or multiple comparisons.",
+  "seeds": {
+    "42": {
+      "overall": {
+        "total": 32,
+        "reference_correct": 26,
+        "candidate_correct": 26,
+        "reference_valid": 32,
+        "candidate_valid": 32,
+        "delta_percentage_points": 0.0,
+        "fixed_ids": [
+          "hard-sol-b-judge_hard-01"
+        ],
+        "regressed_ids": [
+          "hard-sol-b-temporal_numeric-03"
+        ],
+        "mcnemar_exact_unadjusted_p": 1.0,
+        "trace_pairs_audited": 32,
+        "trace_pairs_differing": 0
+      },
+      "strata": {
+        "tier:easy": {
+          "total": 8,
+          "reference_correct": 8,
+          "candidate_correct": 8,
+          "reference_valid": 8,
+          "candidate_valid": 8,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 8,
+          "trace_pairs_differing": 0
+        },
+        "kind:choice": {
+          "total": 12,
+          "reference_correct": 11,
+          "candidate_correct": 10,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": -8.333333333333334,
+          "fixed_ids": [],
+          "regressed_ids": [
+            "hard-sol-b-temporal_numeric-03"
+          ],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 12,
+          "trace_pairs_differing": 0
+        },
+        "family:intent": {
+          "total": 3,
+          "reference_correct": 3,
+          "candidate_correct": 3,
+          "reference_valid": 3,
+          "candidate_valid": 3,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 3,
+          "trace_pairs_differing": 0
+        },
+        "kind:noul": {
+          "total": 12,
+          "reference_correct": 9,
+          "candidate_correct": 10,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 8.333333333333334,
+          "fixed_ids": [
+            "hard-sol-b-judge_hard-01"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 12,
+          "trace_pairs_differing": 0
+        },
+        "family:fact": {
+          "total": 4,
+          "reference_correct": 4,
+          "candidate_correct": 4,
+          "reference_valid": 4,
+          "candidate_valid": 4,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 4,
+          "trace_pairs_differing": 0
+        },
+        "family:extraction": {
+          "total": 5,
+          "reference_correct": 5,
+          "candidate_correct": 5,
+          "reference_valid": 5,
+          "candidate_valid": 5,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 5,
+          "trace_pairs_differing": 0
+        },
+        "tier:original": {
+          "total": 12,
+          "reference_correct": 11,
+          "candidate_correct": 11,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 12,
+          "trace_pairs_differing": 0
+        },
+        "family:policy": {
+          "total": 1,
+          "reference_correct": 1,
+          "candidate_correct": 1,
+          "reference_valid": 1,
+          "candidate_valid": 1,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 1,
+          "trace_pairs_differing": 0
+        },
+        "kind:score": {
+          "total": 8,
+          "reference_correct": 6,
+          "candidate_correct": 6,
+          "reference_valid": 8,
+          "candidate_valid": 8,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 8,
+          "trace_pairs_differing": 0
+        },
+        "family:ordinal": {
+          "total": 4,
+          "reference_correct": 4,
+          "candidate_correct": 4,
+          "reference_valid": 4,
+          "candidate_valid": 4,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 4,
+          "trace_pairs_differing": 0
+        },
+        "family:adequacy": {
+          "total": 3,
+          "reference_correct": 2,
+          "candidate_correct": 2,
+          "reference_valid": 3,
+          "candidate_valid": 3,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 3,
+          "trace_pairs_differing": 0
+        },
+        "tier:hard": {
+          "total": 12,
+          "reference_correct": 7,
+          "candidate_correct": 7,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [
+            "hard-sol-b-judge_hard-01"
+          ],
+          "regressed_ids": [
+            "hard-sol-b-temporal_numeric-03"
+          ],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 12,
+          "trace_pairs_differing": 0
+        },
+        "family:long_policy": {
+          "total": 3,
+          "reference_correct": 2,
+          "candidate_correct": 2,
+          "reference_valid": 3,
+          "candidate_valid": 3,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 3,
+          "trace_pairs_differing": 0
+        },
+        "family:probability": {
+          "total": 1,
+          "reference_correct": 1,
+          "candidate_correct": 1,
+          "reference_valid": 1,
+          "candidate_valid": 1,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 1,
+          "trace_pairs_differing": 0
+        },
+        "family:temporal_numeric": {
+          "total": 3,
+          "reference_correct": 2,
+          "candidate_correct": 1,
+          "reference_valid": 3,
+          "candidate_valid": 3,
+          "delta_percentage_points": -33.333333333333336,
+          "fixed_ids": [],
+          "regressed_ids": [
+            "hard-sol-b-temporal_numeric-03"
+          ],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 3,
+          "trace_pairs_differing": 0
+        },
+        "family:ambiguous": {
+          "total": 1,
+          "reference_correct": 1,
+          "candidate_correct": 1,
+          "reference_valid": 1,
+          "candidate_valid": 1,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 1,
+          "trace_pairs_differing": 0
+        },
+        "family:multi_hop": {
+          "total": 1,
+          "reference_correct": 0,
+          "candidate_correct": 0,
+          "reference_valid": 1,
+          "candidate_valid": 1,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 1,
+          "trace_pairs_differing": 0
+        },
+        "family:tradeoff": {
+          "total": 1,
+          "reference_correct": 0,
+          "candidate_correct": 0,
+          "reference_valid": 1,
+          "candidate_valid": 1,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 1,
+          "trace_pairs_differing": 0
+        },
+        "family:adversarial": {
+          "total": 1,
+          "reference_correct": 1,
+          "candidate_correct": 1,
+          "reference_valid": 1,
+          "candidate_valid": 1,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 1,
+          "trace_pairs_differing": 0
+        },
+        "family:judge_hard": {
+          "total": 1,
+          "reference_correct": 0,
+          "candidate_correct": 1,
+          "reference_valid": 1,
+          "candidate_valid": 1,
+          "delta_percentage_points": 100.0,
+          "fixed_ids": [
+            "hard-sol-b-judge_hard-01"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 1,
+          "trace_pairs_differing": 0
+        }
+      }
+    }
+  }
+}

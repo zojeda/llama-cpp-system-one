@@ -1,0 +1,913 @@
+{
+  "reference_run": "benchmarks/results/research-confirmation-additional-seeds",
+  "reference_arm": "legacy",
+  "candidate_run": "benchmarks/results/research-confirmation-additional-seeds",
+  "candidate_arm": "prefill",
+  "note": "Each seed is reported separately; repeated tasks are not independent samples. P values are exploratory and unadjusted for arm selection or multiple comparisons.",
+  "seeds": {
+    "123": {
+      "overall": {
+        "total": 231,
+        "reference_correct": 163,
+        "candidate_correct": 185,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": 9.523809523809524,
+        "fixed_ids": [
+          "easy-intent-00",
+          "easy-intent-08",
+          "easy-tool_selection-04",
+          "easy-tool_selection-08",
+          "easy-tool_selection-11",
+          "original-intent-02-0",
+          "original-intent-02-1",
+          "original-intent-06-0",
+          "original-intent-06-1",
+          "original-routing-01-0",
+          "original-routing-01-1",
+          "hard-opus-a-long_policy-01",
+          "hard-opus-a-long_policy-08",
+          "hard-opus-a-long_policy-19",
+          "hard-opus-a-temporal_numeric-06",
+          "hard-opus-b-multi_hop-03",
+          "hard-opus-b-multi_hop-07",
+          "hard-opus-c-long_policy-05",
+          "hard-sol-a-multi_hop-09",
+          "hard-sol-a-trap-05",
+          "hard-sol-a-trap-15",
+          "hard-sol-b-judge_hard-18",
+          "hard-sol-b-routing_hard-07",
+          "hard-sol-c-judge_hard-08",
+          "hard-sol-c-multi_hop-07",
+          "hard-sol-c-multi_hop-11"
+        ],
+        "regressed_ids": [
+          "original-intent-05-1",
+          "hard-opus-b-ambiguous-03",
+          "hard-opus-b-tradeoff-08",
+          "hard-sol-c-judge_hard-13"
+        ],
+        "mcnemar_exact_unadjusted_p": 5.947612226009369e-05,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      },
+      "strata": {
+        "tier:easy": {
+          "total": 48,
+          "reference_correct": 43,
+          "candidate_correct": 48,
+          "reference_valid": 48,
+          "candidate_valid": 48,
+          "delta_percentage_points": 10.416666666666666,
+          "fixed_ids": [
+            "easy-intent-00",
+            "easy-intent-08",
+            "easy-tool_selection-04",
+            "easy-tool_selection-08",
+            "easy-tool_selection-11"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.0625,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "kind:choice": {
+          "total": 139,
+          "reference_correct": 94,
+          "candidate_correct": 111,
+          "reference_valid": 139,
+          "candidate_valid": 139,
+          "delta_percentage_points": 12.23021582733813,
+          "fixed_ids": [
+            "easy-intent-00",
+            "easy-intent-08",
+            "easy-tool_selection-04",
+            "easy-tool_selection-08",
+            "easy-tool_selection-11",
+            "original-intent-02-0",
+            "original-intent-02-1",
+            "original-intent-06-0",
+            "original-intent-06-1",
+            "original-routing-01-0",
+            "original-routing-01-1",
+            "hard-opus-a-long_policy-01",
+            "hard-opus-a-long_policy-08",
+            "hard-opus-b-multi_hop-03",
+            "hard-opus-b-multi_hop-07",
+            "hard-sol-a-multi_hop-09",
+            "hard-sol-b-routing_hard-07",
+            "hard-sol-c-multi_hop-07",
+            "hard-sol-c-multi_hop-11"
+          ],
+          "regressed_ids": [
+            "original-intent-05-1",
+            "hard-opus-b-ambiguous-03"
+          ],
+          "mcnemar_exact_unadjusted_p": 0.00022125244140625,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:intent": {
+          "total": 24,
+          "reference_correct": 18,
+          "candidate_correct": 23,
+          "reference_valid": 24,
+          "candidate_valid": 24,
+          "delta_percentage_points": 20.833333333333332,
+          "fixed_ids": [
+            "easy-intent-00",
+            "easy-intent-08",
+            "original-intent-02-0",
+            "original-intent-02-1",
+            "original-intent-06-0",
+            "original-intent-06-1"
+          ],
+          "regressed_ids": [
+            "original-intent-05-1"
+          ],
+          "mcnemar_exact_unadjusted_p": 0.125,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "kind:noul": {
+          "total": 74,
+          "reference_correct": 56,
+          "candidate_correct": 59,
+          "reference_valid": 74,
+          "candidate_valid": 74,
+          "delta_percentage_points": 4.054054054054054,
+          "fixed_ids": [
+            "hard-opus-a-long_policy-19",
+            "hard-opus-a-temporal_numeric-06",
+            "hard-sol-a-trap-15",
+            "hard-sol-b-judge_hard-18",
+            "hard-sol-c-judge_hard-08"
+          ],
+          "regressed_ids": [
+            "hard-opus-b-tradeoff-08",
+            "hard-sol-c-judge_hard-13"
+          ],
+          "mcnemar_exact_unadjusted_p": 0.453125,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:fact": {
+          "total": 12,
+          "reference_correct": 12,
+          "candidate_correct": 12,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:extraction": {
+          "total": 24,
+          "reference_correct": 24,
+          "candidate_correct": 24,
+          "reference_valid": 24,
+          "candidate_valid": 24,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:tool_selection": {
+          "total": 12,
+          "reference_correct": 9,
+          "candidate_correct": 12,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 25.0,
+          "fixed_ids": [
+            "easy-tool_selection-04",
+            "easy-tool_selection-08",
+            "easy-tool_selection-11"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.25,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "tier:original": {
+          "total": 72,
+          "reference_correct": 63,
+          "candidate_correct": 68,
+          "reference_valid": 72,
+          "candidate_valid": 72,
+          "delta_percentage_points": 6.944444444444445,
+          "fixed_ids": [
+            "original-intent-02-0",
+            "original-intent-02-1",
+            "original-intent-06-0",
+            "original-intent-06-1",
+            "original-routing-01-0",
+            "original-routing-01-1"
+          ],
+          "regressed_ids": [
+            "original-intent-05-1"
+          ],
+          "mcnemar_exact_unadjusted_p": 0.125,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:policy": {
+          "total": 12,
+          "reference_correct": 11,
+          "candidate_correct": 11,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "kind:score": {
+          "total": 18,
+          "reference_correct": 13,
+          "candidate_correct": 15,
+          "reference_valid": 18,
+          "candidate_valid": 18,
+          "delta_percentage_points": 11.11111111111111,
+          "fixed_ids": [
+            "hard-opus-c-long_policy-05",
+            "hard-sol-a-trap-05"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.5,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:ordinal": {
+          "total": 12,
+          "reference_correct": 12,
+          "candidate_correct": 12,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:adequacy": {
+          "total": 12,
+          "reference_correct": 10,
+          "candidate_correct": 10,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:routing": {
+          "total": 12,
+          "reference_correct": 10,
+          "candidate_correct": 12,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 16.666666666666668,
+          "fixed_ids": [
+            "original-routing-01-0",
+            "original-routing-01-1"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.5,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "tier:hard": {
+          "total": 111,
+          "reference_correct": 57,
+          "candidate_correct": 69,
+          "reference_valid": 111,
+          "candidate_valid": 111,
+          "delta_percentage_points": 10.81081081081081,
+          "fixed_ids": [
+            "hard-opus-a-long_policy-01",
+            "hard-opus-a-long_policy-08",
+            "hard-opus-a-long_policy-19",
+            "hard-opus-a-temporal_numeric-06",
+            "hard-opus-b-multi_hop-03",
+            "hard-opus-b-multi_hop-07",
+            "hard-opus-c-long_policy-05",
+            "hard-sol-a-multi_hop-09",
+            "hard-sol-a-trap-05",
+            "hard-sol-a-trap-15",
+            "hard-sol-b-judge_hard-18",
+            "hard-sol-b-routing_hard-07",
+            "hard-sol-c-judge_hard-08",
+            "hard-sol-c-multi_hop-07",
+            "hard-sol-c-multi_hop-11"
+          ],
+          "regressed_ids": [
+            "hard-opus-b-ambiguous-03",
+            "hard-opus-b-tradeoff-08",
+            "hard-sol-c-judge_hard-13"
+          ],
+          "mcnemar_exact_unadjusted_p": 0.007537841796875,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:long_policy": {
+          "total": 19,
+          "reference_correct": 7,
+          "candidate_correct": 11,
+          "reference_valid": 19,
+          "candidate_valid": 19,
+          "delta_percentage_points": 21.05263157894737,
+          "fixed_ids": [
+            "hard-opus-a-long_policy-01",
+            "hard-opus-a-long_policy-08",
+            "hard-opus-a-long_policy-19",
+            "hard-opus-c-long_policy-05"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.125,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:probability": {
+          "total": 10,
+          "reference_correct": 6,
+          "candidate_correct": 6,
+          "reference_valid": 10,
+          "candidate_valid": 10,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:temporal_numeric": {
+          "total": 15,
+          "reference_correct": 2,
+          "candidate_correct": 3,
+          "reference_valid": 15,
+          "candidate_valid": 15,
+          "delta_percentage_points": 6.666666666666667,
+          "fixed_ids": [
+            "hard-opus-a-temporal_numeric-06"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:ambiguous": {
+          "total": 7,
+          "reference_correct": 5,
+          "candidate_correct": 4,
+          "reference_valid": 7,
+          "candidate_valid": 7,
+          "delta_percentage_points": -14.285714285714286,
+          "fixed_ids": [],
+          "regressed_ids": [
+            "hard-opus-b-ambiguous-03"
+          ],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:multi_hop": {
+          "total": 18,
+          "reference_correct": 7,
+          "candidate_correct": 12,
+          "reference_valid": 18,
+          "candidate_valid": 18,
+          "delta_percentage_points": 27.77777777777778,
+          "fixed_ids": [
+            "hard-opus-b-multi_hop-03",
+            "hard-opus-b-multi_hop-07",
+            "hard-sol-a-multi_hop-09",
+            "hard-sol-c-multi_hop-07",
+            "hard-sol-c-multi_hop-11"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.0625,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:tradeoff": {
+          "total": 6,
+          "reference_correct": 3,
+          "candidate_correct": 2,
+          "reference_valid": 6,
+          "candidate_valid": 6,
+          "delta_percentage_points": -16.666666666666668,
+          "fixed_ids": [],
+          "regressed_ids": [
+            "hard-opus-b-tradeoff-08"
+          ],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:adversarial": {
+          "total": 6,
+          "reference_correct": 6,
+          "candidate_correct": 6,
+          "reference_valid": 6,
+          "candidate_valid": 6,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:trap": {
+          "total": 8,
+          "reference_correct": 6,
+          "candidate_correct": 8,
+          "reference_valid": 8,
+          "candidate_valid": 8,
+          "delta_percentage_points": 25.0,
+          "fixed_ids": [
+            "hard-sol-a-trap-05",
+            "hard-sol-a-trap-15"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.5,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:judge_hard": {
+          "total": 17,
+          "reference_correct": 11,
+          "candidate_correct": 12,
+          "reference_valid": 17,
+          "candidate_valid": 17,
+          "delta_percentage_points": 5.882352941176471,
+          "fixed_ids": [
+            "hard-sol-b-judge_hard-18",
+            "hard-sol-c-judge_hard-08"
+          ],
+          "regressed_ids": [
+            "hard-sol-c-judge_hard-13"
+          ],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:routing_hard": {
+          "total": 5,
+          "reference_correct": 4,
+          "candidate_correct": 5,
+          "reference_valid": 5,
+          "candidate_valid": 5,
+          "delta_percentage_points": 20.0,
+          "fixed_ids": [
+            "hard-sol-b-routing_hard-07"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        }
+      }
+    },
+    "2026": {
+      "overall": {
+        "total": 231,
+        "reference_correct": 181,
+        "candidate_correct": 189,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": 3.463203463203463,
+        "fixed_ids": [
+          "original-policy-04-0",
+          "original-extraction-02-1",
+          "hard-opus-a-temporal_numeric-07",
+          "hard-opus-b-multi_hop-05",
+          "hard-opus-b-multi_hop-07",
+          "hard-opus-b-probability-01",
+          "hard-opus-c-long_policy-05",
+          "hard-opus-c-long_policy-10",
+          "hard-opus-c-long_policy-11",
+          "hard-opus-c-probability-03",
+          "hard-sol-a-multi_hop-05",
+          "hard-sol-b-judge_hard-18",
+          "hard-sol-c-judge_hard-13",
+          "hard-sol-c-multi_hop-07"
+        ],
+        "regressed_ids": [
+          "hard-opus-a-probability-08",
+          "hard-opus-b-ambiguous-03",
+          "hard-opus-b-ambiguous-07",
+          "hard-opus-b-tradeoff-06",
+          "hard-opus-c-temporal_numeric-08",
+          "hard-sol-b-temporal_numeric-03"
+        ],
+        "mcnemar_exact_unadjusted_p": 0.11531829833984375,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      },
+      "strata": {
+        "tier:easy": {
+          "total": 48,
+          "reference_correct": 48,
+          "candidate_correct": 48,
+          "reference_valid": 48,
+          "candidate_valid": 48,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "kind:choice": {
+          "total": 139,
+          "reference_correct": 111,
+          "candidate_correct": 115,
+          "reference_valid": 139,
+          "candidate_valid": 139,
+          "delta_percentage_points": 2.8776978417266186,
+          "fixed_ids": [
+            "original-extraction-02-1",
+            "hard-opus-a-temporal_numeric-07",
+            "hard-opus-b-multi_hop-07",
+            "hard-opus-b-probability-01",
+            "hard-opus-c-long_policy-10",
+            "hard-opus-c-probability-03",
+            "hard-sol-a-multi_hop-05",
+            "hard-sol-c-multi_hop-07"
+          ],
+          "regressed_ids": [
+            "hard-opus-b-ambiguous-03",
+            "hard-opus-b-ambiguous-07",
+            "hard-opus-c-temporal_numeric-08",
+            "hard-sol-b-temporal_numeric-03"
+          ],
+          "mcnemar_exact_unadjusted_p": 0.3876953125,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:intent": {
+          "total": 24,
+          "reference_correct": 24,
+          "candidate_correct": 24,
+          "reference_valid": 24,
+          "candidate_valid": 24,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "kind:noul": {
+          "total": 74,
+          "reference_correct": 57,
+          "candidate_correct": 59,
+          "reference_valid": 74,
+          "candidate_valid": 74,
+          "delta_percentage_points": 2.7027027027027026,
+          "fixed_ids": [
+            "original-policy-04-0",
+            "hard-opus-c-long_policy-11",
+            "hard-sol-b-judge_hard-18",
+            "hard-sol-c-judge_hard-13"
+          ],
+          "regressed_ids": [
+            "hard-opus-a-probability-08",
+            "hard-opus-b-tradeoff-06"
+          ],
+          "mcnemar_exact_unadjusted_p": 0.6875,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:fact": {
+          "total": 12,
+          "reference_correct": 12,
+          "candidate_correct": 12,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:extraction": {
+          "total": 24,
+          "reference_correct": 23,
+          "candidate_correct": 24,
+          "reference_valid": 24,
+          "candidate_valid": 24,
+          "delta_percentage_points": 4.166666666666667,
+          "fixed_ids": [
+            "original-extraction-02-1"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:tool_selection": {
+          "total": 12,
+          "reference_correct": 12,
+          "candidate_correct": 12,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "tier:original": {
+          "total": 72,
+          "reference_correct": 67,
+          "candidate_correct": 69,
+          "reference_valid": 72,
+          "candidate_valid": 72,
+          "delta_percentage_points": 2.7777777777777777,
+          "fixed_ids": [
+            "original-policy-04-0",
+            "original-extraction-02-1"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.5,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:policy": {
+          "total": 12,
+          "reference_correct": 10,
+          "candidate_correct": 11,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 8.333333333333334,
+          "fixed_ids": [
+            "original-policy-04-0"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "kind:score": {
+          "total": 18,
+          "reference_correct": 13,
+          "candidate_correct": 15,
+          "reference_valid": 18,
+          "candidate_valid": 18,
+          "delta_percentage_points": 11.11111111111111,
+          "fixed_ids": [
+            "hard-opus-b-multi_hop-05",
+            "hard-opus-c-long_policy-05"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.5,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:ordinal": {
+          "total": 12,
+          "reference_correct": 12,
+          "candidate_correct": 12,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:adequacy": {
+          "total": 12,
+          "reference_correct": 10,
+          "candidate_correct": 10,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:routing": {
+          "total": 12,
+          "reference_correct": 12,
+          "candidate_correct": 12,
+          "reference_valid": 12,
+          "candidate_valid": 12,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "tier:hard": {
+          "total": 111,
+          "reference_correct": 66,
+          "candidate_correct": 72,
+          "reference_valid": 111,
+          "candidate_valid": 111,
+          "delta_percentage_points": 5.405405405405405,
+          "fixed_ids": [
+            "hard-opus-a-temporal_numeric-07",
+            "hard-opus-b-multi_hop-05",
+            "hard-opus-b-multi_hop-07",
+            "hard-opus-b-probability-01",
+            "hard-opus-c-long_policy-05",
+            "hard-opus-c-long_policy-10",
+            "hard-opus-c-long_policy-11",
+            "hard-opus-c-probability-03",
+            "hard-sol-a-multi_hop-05",
+            "hard-sol-b-judge_hard-18",
+            "hard-sol-c-judge_hard-13",
+            "hard-sol-c-multi_hop-07"
+          ],
+          "regressed_ids": [
+            "hard-opus-a-probability-08",
+            "hard-opus-b-ambiguous-03",
+            "hard-opus-b-ambiguous-07",
+            "hard-opus-b-tradeoff-06",
+            "hard-opus-c-temporal_numeric-08",
+            "hard-sol-b-temporal_numeric-03"
+          ],
+          "mcnemar_exact_unadjusted_p": 0.237884521484375,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:long_policy": {
+          "total": 19,
+          "reference_correct": 9,
+          "candidate_correct": 12,
+          "reference_valid": 19,
+          "candidate_valid": 19,
+          "delta_percentage_points": 15.789473684210526,
+          "fixed_ids": [
+            "hard-opus-c-long_policy-05",
+            "hard-opus-c-long_policy-10",
+            "hard-opus-c-long_policy-11"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.25,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:probability": {
+          "total": 10,
+          "reference_correct": 5,
+          "candidate_correct": 6,
+          "reference_valid": 10,
+          "candidate_valid": 10,
+          "delta_percentage_points": 10.0,
+          "fixed_ids": [
+            "hard-opus-b-probability-01",
+            "hard-opus-c-probability-03"
+          ],
+          "regressed_ids": [
+            "hard-opus-a-probability-08"
+          ],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:temporal_numeric": {
+          "total": 15,
+          "reference_correct": 5,
+          "candidate_correct": 4,
+          "reference_valid": 15,
+          "candidate_valid": 15,
+          "delta_percentage_points": -6.666666666666667,
+          "fixed_ids": [
+            "hard-opus-a-temporal_numeric-07"
+          ],
+          "regressed_ids": [
+            "hard-opus-c-temporal_numeric-08",
+            "hard-sol-b-temporal_numeric-03"
+          ],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:ambiguous": {
+          "total": 7,
+          "reference_correct": 6,
+          "candidate_correct": 4,
+          "reference_valid": 7,
+          "candidate_valid": 7,
+          "delta_percentage_points": -28.571428571428573,
+          "fixed_ids": [],
+          "regressed_ids": [
+            "hard-opus-b-ambiguous-03",
+            "hard-opus-b-ambiguous-07"
+          ],
+          "mcnemar_exact_unadjusted_p": 0.5,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:multi_hop": {
+          "total": 18,
+          "reference_correct": 10,
+          "candidate_correct": 14,
+          "reference_valid": 18,
+          "candidate_valid": 18,
+          "delta_percentage_points": 22.22222222222222,
+          "fixed_ids": [
+            "hard-opus-b-multi_hop-05",
+            "hard-opus-b-multi_hop-07",
+            "hard-sol-a-multi_hop-05",
+            "hard-sol-c-multi_hop-07"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.125,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:tradeoff": {
+          "total": 6,
+          "reference_correct": 2,
+          "candidate_correct": 1,
+          "reference_valid": 6,
+          "candidate_valid": 6,
+          "delta_percentage_points": -16.666666666666668,
+          "fixed_ids": [],
+          "regressed_ids": [
+            "hard-opus-b-tradeoff-06"
+          ],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:adversarial": {
+          "total": 6,
+          "reference_correct": 6,
+          "candidate_correct": 6,
+          "reference_valid": 6,
+          "candidate_valid": 6,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:trap": {
+          "total": 8,
+          "reference_correct": 7,
+          "candidate_correct": 7,
+          "reference_valid": 8,
+          "candidate_valid": 8,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:judge_hard": {
+          "total": 17,
+          "reference_correct": 11,
+          "candidate_correct": 13,
+          "reference_valid": 17,
+          "candidate_valid": 17,
+          "delta_percentage_points": 11.764705882352942,
+          "fixed_ids": [
+            "hard-sol-b-judge_hard-18",
+            "hard-sol-c-judge_hard-13"
+          ],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 0.5,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        },
+        "family:routing_hard": {
+          "total": 5,
+          "reference_correct": 5,
+          "candidate_correct": 5,
+          "reference_valid": 5,
+          "candidate_valid": 5,
+          "delta_percentage_points": 0.0,
+          "fixed_ids": [],
+          "regressed_ids": [],
+          "mcnemar_exact_unadjusted_p": 1.0,
+          "trace_pairs_audited": 0,
+          "trace_pairs_differing": 0
+        }
+      }
+    }
+  }
+}

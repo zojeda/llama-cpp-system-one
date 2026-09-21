@@ -23,6 +23,7 @@ Prompt
   State: Ground granulated blast furnace slag is used in concrete.
   Question 1: Is this an SCM?       A = yes, B = no
   Question 2: Which material?      A = scm, B = aggregate, C = reinforcement
+  Model turn: <|channel>thought\n<channel|>
 
 Canvas before the read
   Question 1
@@ -31,14 +32,14 @@ Canvas before the read
   Answer: [random token]
 ```
 
-Each bracket represents one token. The question prefixes remain fixed. The initial random tokens can come from outside the allowed answer codes.
+Each bracket represents one token. The question prefixes remain fixed. The initial random tokens can come from outside the allowed answer codes. With the default `think=0`, the model turn starts with the empty thought channel shown above (`\n` denotes a newline). The encoder caches this fixed framing before the answer canvas; it generates no thought tokens.
 
 We assign codes such as `A`, `B`, and `C` because each answer slot occupies one token. At model load, we verify that each code maps to a distinct token. Your external labels, such as `reinforcement`, can contain multiple tokens. After inference, we map codes back to those labels and restore your question IDs. The model receives numbered questions; it does not receive the IDs.
 
 ```mermaid
 flowchart LR
     R[State and questions] --> P[Prompt and answer codes]
-    P --> K[Prompt prefill and cache]
+    P --> K[Prompt and empty thought channel prefill]
     C[Fixed canvas text plus noisy answer slots] --> D[One canvas evaluation]
     K --> D
     D --> L[Allowed logits at each slot]
@@ -48,7 +49,7 @@ flowchart LR
 
 The [compiler](../crates/system-one/src/compiler.rs) constructs the prompt and slot prefixes. The [inference engine](../crates/llama-diffusion-structured/src/engine.rs), with default text options, then:
 
-1. Wraps the prompt in DiffusionGemma's text chat markers and tokenizes it.
+1. Wraps the prompt in DiffusionGemma's text chat markers and appends the empty thought channel to the model turn.
 2. Appends fixed prefixes and one seeded random token per answer slot to the canvas.
 3. Prefills the prompt cache through `PKV_PREFILL`, in chunks up to the batch size.
 4. Evaluates the full canvas with one `PKV_DECODE` call.
@@ -94,7 +95,7 @@ Image requests require a compatible vision-projector GGUF. Rust decodes the comp
 
 We seed `ChaCha8Rng` for noise and sampling. Sample seeds increment by 7919; question chunk seeds increment by 104729, with wrapping arithmetic. Matching requests and seeds reproduce initialization. Different backends and RNG implementations can produce different probabilities.
 
-The first denoising step disables previous-step self-conditioning. Each new sample starts from fresh noise and no prior logits. The native wrapper synchronizes and clears borrowed self-conditioning pointers before returning, including on decode errors. Prompt prefill refreshes the cache before each question chunk; samples reuse that prefix.
+The first denoising step uses no previous-step logits. Each new sample starts from fresh noise and no prior logits. The native wrapper synchronizes and clears borrowed self-conditioning pointers before returning, including on decode errors. Prompt prefill refreshes the cache before each question chunk; samples reuse that prefix.
 
 The service keeps user text separate from special-token chat framing. Vision delimiters come from the projector tokenizer. User-supplied strings cannot inject chat control tokens.
 

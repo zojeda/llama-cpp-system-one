@@ -1,0 +1,127 @@
+{
+  "total_records": 4938,
+  "runs": [
+    {
+      "file": "docs/research/experiment-results.json",
+      "source_run": "benchmarks/results/research-e0-4096",
+      "records": 231,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    },
+    {
+      "file": "docs/research/experiment-results.json",
+      "source_run": "benchmarks/results/research-first-sweep",
+      "records": 775,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    },
+    {
+      "file": "docs/research/experiment-results.json",
+      "source_run": "benchmarks/results/research-contextual-followup",
+      "records": 352,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    },
+    {
+      "file": "docs/research/precision-results.json",
+      "source_run": "benchmarks/results/research-precision-q8",
+      "records": 128,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    },
+    {
+      "file": "docs/research/precision-results.json",
+      "source_run": "benchmarks/results/research-precision-derived-q4",
+      "records": 128,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    },
+    {
+      "file": "docs/research/precision-results.json",
+      "source_run": "benchmarks/results/research-precision-original-q4",
+      "records": 128,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    },
+    {
+      "file": "docs/research/confirmation-results.json",
+      "source_run": "benchmarks/results/research-confirmation-42",
+      "records": 924,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    },
+    {
+      "file": "docs/research/confirmation-results.json",
+      "source_run": "benchmarks/results/research-confirmation-additional-seeds",
+      "records": 1848,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    },
+    {
+      "file": "docs/research/thinking-results.json",
+      "source_run": "benchmarks/results/research-thinking",
+      "records": 288,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    },
+    {
+      "file": "docs/research/context-regression-results.json",
+      "source_run": "benchmarks/results/research-thinking-context-regressions",
+      "records": 8,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    },
+    {
+      "file": "docs/research/flash-attention-results.json",
+      "source_run": "benchmarks/results/research-flash-attention",
+      "records": 128,
+      "checks": [
+        "complete count",
+        "unique arm/seed/task",
+        "recomputed summary",
+        "strata count reconciliation"
+      ]
+    }
+  ],
+  "python_syntax": "passed"
+}

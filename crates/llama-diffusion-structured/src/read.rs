@@ -2,6 +2,28 @@
 
 use serde::{Deserialize, Serialize};
 
+/// Explicit formatting controls for reproducible inference experiments.
+/// User-provided text remains tokenized without interpreting control markers.
+/// `Default` is the unframed control; [`crate::Engine::read_with_options`] selects service defaults.
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct ReadLayout {
+    pub system_prompt: Option<String>,
+    pub canvas_prefix: String,
+    pub canvas_suffix: String,
+    pub prefill_suffix: String,
+    pub pad_to: usize,
+    pub thinking_marker: bool,
+    /// OpenJev policy: up to four total reads when top-20-plus-label entropy exceeds 0.1.
+    pub adaptive_samples: bool,
+    /// Experiment: bypass a self-conditioning branch whose contribution is multiplied by zero.
+    pub skip_zero_self_conditioning: bool,
+    /// Opt-in research diagnostics; contains input tokens and must not be logged by the service.
+    pub capture_trace: bool,
+    /// Resolve the answer token inside its complete textual template.
+    pub contextual_tokens: bool,
+}
+
 #[derive(Clone, Copy, Debug)]
 pub struct ReadOptions {
     pub steps: usize,
@@ -85,4 +107,40 @@ pub struct ReadResult {
     pub output_tokens: usize,
     pub seed: u64,
     pub forward_ms: f64,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub traces: Vec<ReadTrace>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub profile: Option<ReadProfile>,
+}
+
+/// Wall-clock phase timings for opt-in research traces; no request text.
+#[derive(Debug, Default, Serialize)]
+pub struct ReadProfile {
+    pub prefill_ms: f64,
+    pub decode_ms: f64,
+    pub logits_copy_ms: f64,
+    pub sampling_ms: f64,
+    pub entropy_ms: f64,
+    pub decode_calls: usize,
+}
+
+impl ReadProfile {
+    pub(crate) fn add(&mut self, other: &Self) {
+        self.prefill_ms += other.prefill_ms;
+        self.decode_ms += other.decode_ms;
+        self.logits_copy_ms += other.logits_copy_ms;
+        self.sampling_ms += other.sampling_ms;
+        self.entropy_ms += other.entropy_ms;
+        self.decode_calls += other.decode_calls;
+    }
+}
+
+#[derive(Debug, Serialize)]
+pub struct ReadTrace {
+    pub prompt_token_ids: Vec<i32>,
+    pub initial_canvas: Vec<i32>,
+    pub slot_positions: Vec<usize>,
+    pub candidate_tokens: Vec<Vec<i32>>,
+    pub candidates_match_context: Vec<Vec<bool>>,
+    pub partial_entropy: Option<f64>,
 }

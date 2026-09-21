@@ -1,0 +1,452 @@
+{
+  "scope": "Three completed framing arms at all three seeds; the same 231 public cases are repeated, not independent samples",
+  "source_runs": [
+    "research-confirmation-42",
+    "research-confirmation-additional-seeds"
+  ],
+  "summary": [
+    {
+      "arm": "legacy",
+      "seed": 42,
+      "total": 231,
+      "correct": 165,
+      "valid": 231,
+      "p50_s": 0.837039906,
+      "p95_s": 7.857364534,
+      "valid_p50_s": 0.837039906,
+      "valid_p95_s": 7.857364534
+    },
+    {
+      "arm": "prefill",
+      "seed": 42,
+      "total": 231,
+      "correct": 189,
+      "valid": 231,
+      "p50_s": 0.899833064,
+      "p95_s": 7.660008951,
+      "valid_p50_s": 0.899833064,
+      "valid_p95_s": 7.660008951
+    },
+    {
+      "arm": "canvas",
+      "seed": 42,
+      "total": 231,
+      "correct": 187,
+      "valid": 231,
+      "p50_s": 0.777170191,
+      "p95_s": 7.3437977645,
+      "valid_p50_s": 0.777170191,
+      "valid_p95_s": 7.3437977645
+    },
+    {
+      "arm": "legacy",
+      "seed": 123,
+      "total": 231,
+      "correct": 163,
+      "valid": 231,
+      "p50_s": 0.905896296,
+      "p95_s": 9.117984362000001,
+      "valid_p50_s": 0.905896296,
+      "valid_p95_s": 9.117984362000001
+    },
+    {
+      "arm": "legacy",
+      "seed": 2026,
+      "total": 231,
+      "correct": 181,
+      "valid": 231,
+      "p50_s": 0.864288651,
+      "p95_s": 8.094163972499999,
+      "valid_p50_s": 0.864288651,
+      "valid_p95_s": 8.094163972499999
+    },
+    {
+      "arm": "prefill",
+      "seed": 123,
+      "total": 231,
+      "correct": 185,
+      "valid": 231,
+      "p50_s": 0.93483382,
+      "p95_s": 8.324181832,
+      "valid_p50_s": 0.93483382,
+      "valid_p95_s": 8.324181832
+    },
+    {
+      "arm": "prefill",
+      "seed": 2026,
+      "total": 231,
+      "correct": 189,
+      "valid": 231,
+      "p50_s": 0.934468249,
+      "p95_s": 8.474260343000001,
+      "valid_p50_s": 0.934468249,
+      "valid_p95_s": 8.474260343000001
+    },
+    {
+      "arm": "canvas",
+      "seed": 123,
+      "total": 231,
+      "correct": 187,
+      "valid": 231,
+      "p50_s": 0.851276463,
+      "p95_s": 8.153895295,
+      "valid_p50_s": 0.851276463,
+      "valid_p95_s": 8.153895295
+    },
+    {
+      "arm": "canvas",
+      "seed": 2026,
+      "total": 231,
+      "correct": 187,
+      "valid": 231,
+      "p50_s": 0.851665946,
+      "p95_s": 8.1964559415,
+      "valid_p50_s": 0.851665946,
+      "valid_p95_s": 8.1964559415
+    }
+  ],
+  "mean_correct": {
+    "legacy": 169.66666666666666,
+    "prefill": 187.66666666666666,
+    "canvas": 187
+  },
+  "paired": {
+    "42": {
+      "legacy_to_prefill": {
+        "total": 231,
+        "reference_correct": 165,
+        "candidate_correct": 189,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": 10.38961038961039,
+        "fixed_ids": [
+          "easy-fact-01",
+          "easy-fact-05",
+          "easy-fact-07",
+          "easy-tool_selection-04",
+          "original-policy-04-0",
+          "original-intent-02-1",
+          "original-intent-05-1",
+          "original-intent-06-0",
+          "original-extraction-01-1",
+          "original-adequacy-05-0",
+          "original-adequacy-05-1",
+          "hard-opus-a-long_policy-01",
+          "hard-opus-a-long_policy-08",
+          "hard-opus-a-long_policy-19",
+          "hard-opus-a-probability-07",
+          "hard-opus-a-probability-08",
+          "hard-opus-a-temporal_numeric-06",
+          "hard-opus-b-multi_hop-03",
+          "hard-opus-b-multi_hop-05",
+          "hard-opus-b-tradeoff-03",
+          "hard-opus-c-long_policy-05",
+          "hard-opus-c-temporal_numeric-08",
+          "hard-sol-a-multi_hop-05",
+          "hard-sol-a-multi_hop-09",
+          "hard-sol-a-trap-15",
+          "hard-sol-b-judge_hard-18",
+          "hard-sol-b-long_policy-02",
+          "hard-sol-b-long_policy-06",
+          "hard-sol-c-judge_hard-13",
+          "hard-sol-c-multi_hop-07",
+          "hard-sol-c-multi_hop-11"
+        ],
+        "regressed_ids": [
+          "original-policy-06-1",
+          "hard-opus-a-long_policy-11",
+          "hard-opus-b-probability-01",
+          "hard-opus-b-probability-06",
+          "hard-opus-c-temporal_numeric-04",
+          "hard-sol-b-temporal_numeric-03",
+          "hard-sol-b-temporal_numeric-04"
+        ],
+        "mcnemar_exact_unadjusted_p": 0.00011616700794547796,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      },
+      "legacy_to_canvas": {
+        "total": 231,
+        "reference_correct": 165,
+        "candidate_correct": 187,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": 9.523809523809524,
+        "fixed_ids": [
+          "easy-fact-01",
+          "easy-fact-05",
+          "easy-fact-07",
+          "easy-tool_selection-04",
+          "original-policy-04-0",
+          "original-intent-02-1",
+          "original-intent-05-1",
+          "original-intent-06-0",
+          "original-extraction-01-1",
+          "original-adequacy-05-0",
+          "original-adequacy-05-1",
+          "hard-opus-a-long_policy-01",
+          "hard-opus-a-long_policy-08",
+          "hard-opus-a-long_policy-19",
+          "hard-opus-a-probability-07",
+          "hard-opus-a-probability-08",
+          "hard-opus-a-temporal_numeric-06",
+          "hard-opus-b-multi_hop-03",
+          "hard-opus-b-multi_hop-05",
+          "hard-opus-b-multi_hop-07",
+          "hard-opus-b-tradeoff-03",
+          "hard-opus-c-long_policy-05",
+          "hard-opus-c-temporal_numeric-08",
+          "hard-sol-a-multi_hop-05",
+          "hard-sol-a-multi_hop-09",
+          "hard-sol-a-trap-15",
+          "hard-sol-b-judge_hard-18",
+          "hard-sol-b-long_policy-02",
+          "hard-sol-c-judge_hard-13",
+          "hard-sol-c-multi_hop-07",
+          "hard-sol-c-multi_hop-11"
+        ],
+        "regressed_ids": [
+          "original-policy-06-1",
+          "hard-opus-a-long_policy-11",
+          "hard-opus-b-ambiguous-03",
+          "hard-opus-b-probability-01",
+          "hard-opus-b-probability-03",
+          "hard-opus-b-probability-06",
+          "hard-opus-c-temporal_numeric-04",
+          "hard-sol-b-temporal_numeric-03",
+          "hard-sol-b-temporal_numeric-04"
+        ],
+        "mcnemar_exact_unadjusted_p": 0.0006795482549932785,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      },
+      "canvas_to_prefill": {
+        "total": 231,
+        "reference_correct": 187,
+        "candidate_correct": 189,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": 0.8658008658008658,
+        "fixed_ids": [
+          "hard-opus-b-ambiguous-03",
+          "hard-opus-b-probability-03",
+          "hard-sol-b-long_policy-06"
+        ],
+        "regressed_ids": [
+          "hard-opus-b-multi_hop-07"
+        ],
+        "mcnemar_exact_unadjusted_p": 0.625,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      }
+    },
+    "123": {
+      "legacy_to_prefill": {
+        "total": 231,
+        "reference_correct": 163,
+        "candidate_correct": 185,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": 9.523809523809524,
+        "fixed_ids": [
+          "easy-intent-00",
+          "easy-intent-08",
+          "easy-tool_selection-04",
+          "easy-tool_selection-08",
+          "easy-tool_selection-11",
+          "original-intent-02-0",
+          "original-intent-02-1",
+          "original-intent-06-0",
+          "original-intent-06-1",
+          "original-routing-01-0",
+          "original-routing-01-1",
+          "hard-opus-a-long_policy-01",
+          "hard-opus-a-long_policy-08",
+          "hard-opus-a-long_policy-19",
+          "hard-opus-a-temporal_numeric-06",
+          "hard-opus-b-multi_hop-03",
+          "hard-opus-b-multi_hop-07",
+          "hard-opus-c-long_policy-05",
+          "hard-sol-a-multi_hop-09",
+          "hard-sol-a-trap-05",
+          "hard-sol-a-trap-15",
+          "hard-sol-b-judge_hard-18",
+          "hard-sol-b-routing_hard-07",
+          "hard-sol-c-judge_hard-08",
+          "hard-sol-c-multi_hop-07",
+          "hard-sol-c-multi_hop-11"
+        ],
+        "regressed_ids": [
+          "original-intent-05-1",
+          "hard-opus-b-ambiguous-03",
+          "hard-opus-b-tradeoff-08",
+          "hard-sol-c-judge_hard-13"
+        ],
+        "mcnemar_exact_unadjusted_p": 5.947612226009369e-05,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      },
+      "legacy_to_canvas": {
+        "total": 231,
+        "reference_correct": 163,
+        "candidate_correct": 187,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": 10.38961038961039,
+        "fixed_ids": [
+          "easy-intent-00",
+          "easy-intent-08",
+          "easy-tool_selection-04",
+          "easy-tool_selection-08",
+          "easy-tool_selection-11",
+          "original-intent-02-0",
+          "original-intent-02-1",
+          "original-intent-06-0",
+          "original-intent-06-1",
+          "original-routing-01-0",
+          "original-routing-01-1",
+          "hard-opus-a-long_policy-01",
+          "hard-opus-a-long_policy-08",
+          "hard-opus-a-long_policy-19",
+          "hard-opus-a-temporal_numeric-06",
+          "hard-opus-b-multi_hop-03",
+          "hard-opus-b-multi_hop-07",
+          "hard-opus-b-tradeoff-03",
+          "hard-opus-c-long_policy-03",
+          "hard-opus-c-long_policy-05",
+          "hard-sol-a-multi_hop-09",
+          "hard-sol-a-trap-05",
+          "hard-sol-b-routing_hard-07",
+          "hard-sol-c-judge_hard-08",
+          "hard-sol-c-multi_hop-07",
+          "hard-sol-c-multi_hop-11"
+        ],
+        "regressed_ids": [
+          "hard-opus-b-ambiguous-03",
+          "hard-opus-b-tradeoff-08"
+        ],
+        "mcnemar_exact_unadjusted_p": 3.032386302947998e-06,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      },
+      "canvas_to_prefill": {
+        "total": 231,
+        "reference_correct": 187,
+        "candidate_correct": 185,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": -0.8658008658008658,
+        "fixed_ids": [
+          "hard-sol-a-trap-15",
+          "hard-sol-b-judge_hard-18"
+        ],
+        "regressed_ids": [
+          "original-intent-05-1",
+          "hard-opus-b-tradeoff-03",
+          "hard-opus-c-long_policy-03",
+          "hard-sol-c-judge_hard-13"
+        ],
+        "mcnemar_exact_unadjusted_p": 0.6875,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      }
+    },
+    "2026": {
+      "legacy_to_prefill": {
+        "total": 231,
+        "reference_correct": 181,
+        "candidate_correct": 189,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": 3.463203463203463,
+        "fixed_ids": [
+          "original-policy-04-0",
+          "original-extraction-02-1",
+          "hard-opus-a-temporal_numeric-07",
+          "hard-opus-b-multi_hop-05",
+          "hard-opus-b-multi_hop-07",
+          "hard-opus-b-probability-01",
+          "hard-opus-c-long_policy-05",
+          "hard-opus-c-long_policy-10",
+          "hard-opus-c-long_policy-11",
+          "hard-opus-c-probability-03",
+          "hard-sol-a-multi_hop-05",
+          "hard-sol-b-judge_hard-18",
+          "hard-sol-c-judge_hard-13",
+          "hard-sol-c-multi_hop-07"
+        ],
+        "regressed_ids": [
+          "hard-opus-a-probability-08",
+          "hard-opus-b-ambiguous-03",
+          "hard-opus-b-ambiguous-07",
+          "hard-opus-b-tradeoff-06",
+          "hard-opus-c-temporal_numeric-08",
+          "hard-sol-b-temporal_numeric-03"
+        ],
+        "mcnemar_exact_unadjusted_p": 0.11531829833984375,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      },
+      "legacy_to_canvas": {
+        "total": 231,
+        "reference_correct": 181,
+        "candidate_correct": 187,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": 2.5974025974025974,
+        "fixed_ids": [
+          "original-policy-04-0",
+          "original-extraction-02-1",
+          "hard-opus-a-temporal_numeric-07",
+          "hard-opus-b-multi_hop-05",
+          "hard-opus-b-probability-01",
+          "hard-opus-b-tradeoff-03",
+          "hard-opus-c-long_policy-05",
+          "hard-opus-c-long_policy-10",
+          "hard-opus-c-long_policy-11",
+          "hard-sol-a-multi_hop-05",
+          "hard-sol-b-judge_hard-18",
+          "hard-sol-c-judge_hard-07",
+          "hard-sol-c-judge_hard-13",
+          "hard-sol-c-multi_hop-07"
+        ],
+        "regressed_ids": [
+          "hard-opus-a-probability-08",
+          "hard-opus-b-ambiguous-03",
+          "hard-opus-b-ambiguous-07",
+          "hard-opus-b-probability-06",
+          "hard-opus-b-tradeoff-06",
+          "hard-opus-c-long_policy-04",
+          "hard-opus-c-temporal_numeric-08",
+          "hard-sol-b-temporal_numeric-03"
+        ],
+        "mcnemar_exact_unadjusted_p": 0.28627872467041016,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      },
+      "canvas_to_prefill": {
+        "total": 231,
+        "reference_correct": 187,
+        "candidate_correct": 189,
+        "reference_valid": 231,
+        "candidate_valid": 231,
+        "delta_percentage_points": 0.8658008658008658,
+        "fixed_ids": [
+          "hard-opus-b-multi_hop-07",
+          "hard-opus-b-probability-06",
+          "hard-opus-c-long_policy-04",
+          "hard-opus-c-probability-03"
+        ],
+        "regressed_ids": [
+          "hard-opus-b-tradeoff-03",
+          "hard-sol-c-judge_hard-07"
+        ],
+        "mcnemar_exact_unadjusted_p": 0.6875,
+        "trace_pairs_audited": 0,
+        "trace_pairs_differing": 0
+      }
+    }
+  },
+  "candidate_default": "prefill",
+  "selection_reason": "Slightly higher three-seed mean and higher accuracy at the retained default seed 42; preserves the existing answer canvas lengths and positions. Final native and HTTP checks remain pending."
+}

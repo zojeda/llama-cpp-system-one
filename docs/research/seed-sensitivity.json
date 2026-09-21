@@ -1,0 +1,91 @@
+{
+  "scope": "231 single-question public cases; legacy layout; original Q4; context 8192",
+  "model_sha256": "24523b6c833c9ce9f5f34f9b333ab1517d73d6f1e76a103645353114c8028bc5",
+  "note": "A fixed seed repeats the same first noise token across all these single-question requests. Token text alone does not establish why an answer changes. Candidate gains must use matching seeds.",
+  "seeds": {
+    "42": {
+      "correct": 165,
+      "valid": 231,
+      "initial_token_id": 58741,
+      "vocabulary_piece": "▁Sheffield",
+      "fixed_vs_seed42": [],
+      "regressed_vs_seed42": []
+    },
+    "123": {
+      "correct": 163,
+      "valid": 231,
+      "initial_token_id": 236736,
+      "vocabulary_piece": "▁రావ",
+      "fixed_vs_seed42": [
+        "easy-fact-01",
+        "easy-fact-05",
+        "easy-fact-07",
+        "original-intent-05-1",
+        "original-extraction-01-1",
+        "original-adequacy-05-0",
+        "original-adequacy-05-1",
+        "hard-opus-a-probability-03",
+        "hard-opus-a-probability-07",
+        "hard-opus-b-tradeoff-08",
+        "hard-sol-b-long_policy-02",
+        "hard-sol-c-judge_hard-13"
+      ],
+      "regressed_vs_seed42": [
+        "easy-intent-00",
+        "easy-intent-08",
+        "easy-tool_selection-08",
+        "easy-tool_selection-11",
+        "original-intent-02-0",
+        "original-intent-06-1",
+        "original-routing-01-0",
+        "original-routing-01-1",
+        "hard-opus-a-long_policy-11",
+        "hard-opus-c-temporal_numeric-04",
+        "hard-sol-b-routing_hard-07",
+        "hard-sol-b-temporal_numeric-03",
+        "hard-sol-b-temporal_numeric-04",
+        "hard-sol-c-judge_hard-08"
+      ]
+    },
+    "2026": {
+      "correct": 181,
+      "valid": 231,
+      "initial_token_id": 14846,
+      "vocabulary_piece": "▁potentially",
+      "fixed_vs_seed42": [
+        "easy-fact-01",
+        "easy-fact-05",
+        "easy-fact-07",
+        "easy-tool_selection-04",
+        "original-intent-02-1",
+        "original-intent-05-1",
+        "original-intent-06-0",
+        "original-extraction-01-1",
+        "original-adequacy-05-0",
+        "original-adequacy-05-1",
+        "hard-opus-a-long_policy-01",
+        "hard-opus-a-long_policy-08",
+        "hard-opus-a-long_policy-19",
+        "hard-opus-a-probability-07",
+        "hard-opus-a-probability-08",
+        "hard-opus-a-temporal_numeric-06",
+        "hard-opus-b-ambiguous-07",
+        "hard-opus-b-multi_hop-03",
+        "hard-opus-c-temporal_numeric-08",
+        "hard-sol-a-multi_hop-09",
+        "hard-sol-a-trap-15",
+        "hard-sol-b-long_policy-02",
+        "hard-sol-c-multi_hop-11"
+      ],
+      "regressed_vs_seed42": [
+        "original-policy-06-1",
+        "original-extraction-02-1",
+        "hard-opus-a-long_policy-11",
+        "hard-opus-b-probability-01",
+        "hard-opus-c-long_policy-10",
+        "hard-opus-c-temporal_numeric-04",
+        "hard-sol-b-temporal_numeric-04"
+      ]
+    }
+  }
+}
