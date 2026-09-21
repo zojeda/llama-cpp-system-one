@@ -1,112 +1,99 @@
-# JevBench public results (2026-09-21)
+# JevBench public results
 
-Baseline (`think=0`) completed 2026-09-21T11:40:06.605605+00:00: **165/231 (71.4%) correct**; 231/231 valid responses. All 231 public cases attempted.
+The default service configuration completed all **231 public cases** on 2026-09-21: **189/231 correct (81.8%)**, with **231/231 valid responses**. The [snapshot](results-2026-09-21-defaults.json) contains per-case predictions, probabilities, expected labels, latency, usage, and provenance hashes.
 
-| Public tier | Correct | p50 latency | p95 latency |
-| --- | ---: | ---: | ---: |
-| Easy | 44/48 (91.7%) | 0.645 s | 0.781 s |
-| Standard | 63/72 (87.5%) | 0.713 s | 0.975 s |
-| Hard | 58/111 (52.3%) | 1.772 s | 9.357 s |
-| All | 165/231 (71.4%) | 0.914 s | 7.417 s |
+| Public tier | Correct | Valid responses | p50 latency | p95 latency |
+| --- | ---: | ---: | ---: | ---: |
+| Easy | 48/48 (100.0%) | 48/48 | 0.798 s | 0.903 s |
+| Standard | 69/72 (95.8%) | 72/72 | 0.813 s | 0.906 s |
+| Hard | 72/111 (64.9%) | 111/111 | 2.040 s | 10.619 s |
+| All | **189/231 (81.8%)** | 231/231 | **0.912 s** | **8.124 s** |
 
-Mean latency: 2.007 s. HTTP/adapter failures: 0. Strict schema validity: 100.0%. Distributions renormalized by upstream scorer: 0.
+Mean caller latency: 2.255 s. Calibration over valid distributions: ECE 0.0898; multiclass Brier 0.2687 (lower is better).
 
 ## Think extension rerun
 
-With `think=1024`, the same running service answered **184/231 (79.7%)** correctly: easy 48/48, standard 69/72, hard 67/111. Thinking fixed 28 baseline errors and lost 9 previously correct answers, for a net gain of 19 answers (8.2 percentage points).
+With `think=1024` on the same binary and 8,192-token context, the service scored **189/231 (81.8%)**, with **231/231 valid responses**. Thinking fixed one baseline error and lost one previously correct answer, giving no net accuracy gain in this run.
 
-Median latency rose from 0.914 to 17.204 seconds; p95 rose from 7.417 to 35.569 seconds. Eight long requests exceeded the unchanged 4,096-token context when reserving the thought budget, leaving 223 valid responses. Those failures count as incorrect. See the [full thinking comparison](think1024-2026-09-21.md) and [results snapshot](results-2026-09-21-think1024.json).
-
-## Same public cases, published reference runs
-
-Reference accuracy is recomputed from Benchmark Heaven’s published per-item outcomes for these exact 231 IDs. These reference models were not rerun here. Hardware, inference settings, and run dates differ; this is not an official ranking.
-
-| Configuration | Easy (48) | Standard (72) | Hard (111) | All (231) |
+| Public tier | think=0 | think=1024 | Thinking p50 | Thinking p95 |
 | --- | ---: | ---: | ---: | ---: |
-| Local, think=0 | 44/48 (91.7%) | 63/72 (87.5%) | 58/111 (52.3%) | 165/231 (71.4%) |
-| Local, think=1024 | 48/48 (100.0%) | 69/72 (95.8%) | 67/111 (60.4%) | 184/231 (79.7%) |
-| Jev 1.13.0 (TypeSafe AI) | 48/48 (100.0%) | 71/72 (98.6%) | 81/111 (73.0%) | 200/231 (86.6%) |
-| djev (Maisa, diffusion-gemma) | 48/48 (100.0%) | 71/72 (98.6%) | 75/111 (67.6%) | 194/231 (84.0%) |
-| OpenJev (DiffusionGemma 26B-A4B NVFP4, razorback16) | 48/48 (100.0%) | 70/72 (97.2%) | 71/111 (64.0%) | 189/231 (81.8%) |
-| SemIf, formerly OpenJev (Qwen3.5-4B, TheoLeeCJ) | 48/48 (100.0%) | 71/72 (98.6%) | 68/111 (61.3%) | 187/231 (81.0%) |
+| Easy | 48/48 (100.0%) | 48/48 (100.0%) | 12.714 s | 45.085 s |
+| Standard | 69/72 (95.8%) | 69/72 (95.8%) | 18.310 s | 33.876 s |
+| Hard | 72/111 (64.9%) | 72/111 (64.9%) | 21.202 s | 37.765 s |
+| All | **189/231 (81.8%)** | **189/231 (81.8%)** | **18.325 s** | **37.483 s** |
 
-[Pinned upstream source](https://github.com/fstandhartinger/jevbench/tree/fd51755eb0c0b546ca206d764faf3302feca913e); [published reference outcomes](https://github.com/fstandhartinger/jevbench/tree/fd51755eb0c0b546ca206d764faf3302feca913e/results/v1.2/jevbench-v1.2-per-task.json).
+Thinking median/p95 latency was **18.325/37.483 seconds**, compared with **0.912/8.124 seconds** at `think=0`. Both runs used one excluded warmup; the thinking run used a 900-second timeout. See the [full report and reproduction command](think1024-defaults-2026-09-21.md) and [verified results snapshot](results-2026-09-21-defaults-think1024.json).
 
-## Calibration and scope
+## Earlier runs
 
-All-public ECE: 0.1129; multiclass Brier: 0.4149 (n=231; lower is better). Hard-public ECE: 0.2570. Mean total variation distance to exact gold probabilities: 0.3060 (n=10 public probability items; lower is better).
+The [earlier baseline](baseline-2026-09-21.md) scored 165/231 (71.4%); the [historical `think=1024` run](think1024-2026-09-21.md) scored 184/231 (79.7%), with eight context-limit failures. Both used a 4,096-token context and no benchmark warmup. The current default run changes the zero-thought prompt framing, increases the context to 8,192, and includes one excluded warmup. The thinking configuration was subsequently rerun on the current build; see the comparison above.
 
-The official board evaluates 534 decisions: 72 easy, 96 standard, 146 judge, and 220 hard. This public run covers 48 easy, 72 standard, and 111 hard. The other 303 decisions are not distributed in the public repository. No official Intelligence, Speed, Cost, composite score, or leaderboard rank is claimed. Local compute cost is unknown, not zero. Latency is raw loopback wall time with no production-load adjustment; it is not directly comparable to hosted latency from Germany.
+Against the earlier baseline, the current `think=0` run fixed 31 answers and lost 7 previously correct answers; 193 kept the same correctness. That is 24 more correct answers, or +10.4 percentage points. This is not a controlled single-variable comparison. Historical snapshots remain unchanged.
+
+## Published comparisons
+
+We recomputed the reference figures for the same 231 public IDs from the [pinned upstream results](https://github.com/fstandhartinger/jevbench/blob/fd51755eb0c0b546ca206d764faf3302feca913e/results/v1.2/jevbench-v1.2-per-task.json). We did not rerun these deployments.
+
+| Model / configuration | Correct | Accuracy | p50 latency | p95 latency |
+| --- | ---: | ---: | ---: | ---: |
+| Jev 1.13.0 (TypeSafe AI) | 200/231 | 86.6% | 0.665 s | 0.803 s |
+| djev (Maisa, diffusion-gemma) | 194/231 | 84.0% | 0.239 s | 0.354 s |
+| OpenJev (DiffusionGemma 26B-A4B NVFP4, razorback16) | 189/231 | 81.8% | 0.246 s | 0.459 s |
+| SemIf, formerly OpenJev (Qwen3.5-4B, TheoLeeCJ) | 187/231 | 81.0% | 0.194 s | 0.538 s |
+| **Local Q4_K_M, defaults** | **189/231** | **81.8%** | **0.912 s** | **8.124 s** |
+| **Local Q4_K_M, `think=1024`** | **189/231** | **81.8%** | **18.325 s** | **37.483 s** |
+
+## Method and scope
+
+We used the upstream TypeSafe HTTP adapter and scorer at commit `fd51755eb0c0b546ca206d764faf3302feca913e`. Accuracy follows the scorer's argmax rule, including ordinal questions. HTTP and schema failures count as incorrect.
+
+Requests ran serially in easy, standard, then hard order, after one excluded warmup with the tested thought budget. There were no retries; the adapter timeout was 120 seconds for `think=0` and 900 seconds for `think=1024`. p50/p95 use linear interpolation over all caller wall times, including failures. Model loading and the warmup are excluded. No other local inference or build workload was observed during either timed run. HTTP smoke checks ran after timing.
+
+Reference timings use published values rounded to milliseconds, measured from Germany. Our measurements use local loopback. Hardware, network, quantization, and inference settings differ; these timings do not isolate model speed.
+
+The official benchmark includes 534 decisions. This public subset includes 48 easy, 72 standard, and 111 hard cases; the other 303 decisions are unavailable in the public datasets. This fixed-seed run does not establish an official rank or unseen-task accuracy. Local compute cost is unpriced.
 
 ## Configuration
 
-Hardware: AMD Ryzen AI MAX+ 395 with Radeon 8060S, running under WSL2. The [results snapshot](results-2026-09-21.json) records the run settings, dataset hashes, metrics, and per-case outcomes.
+- AMD Ryzen AI MAX+ 395 / Radeon 8060S, WSL2, ROCm 7.2.1, `gfx1151`.
+- HIP/native release build, eight CPU threads, all model layers offloaded, flash attention off.
+- `diffusiongemma-26B-A4B-it-Q4_K_M.gguf`; model SHA-256 `24523b6c833c9ce9f5f34f9b333ab1517d73d6f1e76a103645353114c8028bc5`.
+- Default context 8,192, batch 512, seed 42; `steps=1`, `samples=1`, `think=0`, `sequential=false`.
+- Empty, closed thought channel in prefill; no generated thought tokens.
+- Pinned native sources: `12e0a9627d02c6395fd4bbf2aadff93d0d46a0e4`.
 
-- Model: `diffusiongemma-26B-A4B-it-Q4_K_M.gguf`; API model ID `gemmadiffusion-0.1`.
-- User-reported build: release, `hip,native`; observed process environment: `AMDGPU_TARGETS=gfx1151`.
-- Existing service at `http://127.0.0.1:8080`; no restart or service code changes.
-- Default request extensions: steps=1, samples=1, think=0, sequential=false.
-- Official TypeSafe adapter and scorer, unchanged. Original task order: easy, standard, hard. One request at a time, no warmups or retries.
-- Accuracy uses the upstream argmax rule, including ordinal questions; HTTP and schema failures count as incorrect.
-- Harness commit: `fd51755eb0c0b546ca206d764faf3302feca913e`; service checkout: `b2af49143af81da44c3962bd1d6f95532b7d015b` (checkout identity, not embedded binary build provenance).
+The snapshot includes binary, model, Rust source, build-file, dataset, and scorer hashes to identify the measured implementation.
+
+Run: `jevbench-defaults-2026-09-21`; timed requests started at `2026-09-21T20:14:44.105437+00:00` and finished at `2026-09-21T20:22:47.347031+00:00`.
 
 ## Reproduce
 
-Start the service with the model and HIP/native configuration described above. From the repository root, fetch the pinned upstream harness and run its three public datasets. The HTTP adapter requires only Python's standard library.
+Configure the SDK and model paths using the [build guide](../../docs/build.md#rocmhip). Build the service, fetch the pinned harness, then run the local wrapper. It starts a service on port 8082 and stops that service when finished.
 
 ```bash
+cargo build --release --locked -p llama-cpp-system-one --features hip,native
 JEVBENCH_SOURCE=$(mktemp -d)
 git clone https://github.com/fstandhartinger/jevbench.git "$JEVBENCH_SOURCE"
 git -C "$JEVBENCH_SOURCE" checkout --detach fd51755eb0c0b546ca206d764faf3302feca913e
-export PYTHONPATH="$JEVBENCH_SOURCE"
-JEVBENCH_OUTPUT="$PWD/benchmarks/results/jevbench-$(date -u +%Y-%m-%dT%H-%M-%SZ)"
-JEVBENCH_TASKS="$JEVBENCH_SOURCE/datasets/public/easy.jsonl,$JEVBENCH_SOURCE/datasets/public/original.jsonl,$JEVBENCH_SOURCE/datasets/public/hard.jsonl"
 
-python3 -u -m jevbench.cli run \
-  --tasks "$JEVBENCH_TASKS" --adapter typesafe \
-  --endpoint http://127.0.0.1:8080 --model gemmadiffusion-0.1 --key-env '' \
-  --cost-basis local_compute_unpriced --reserve-usd 0 --cap-usd 0 \
-  --results "$JEVBENCH_OUTPUT/results.jsonl" --raw-dir "$JEVBENCH_OUTPUT/raw" \
-  --ledger "$JEVBENCH_OUTPUT/ledger.jsonl" --manifest "$JEVBENCH_OUTPUT/manifest.json"
-
-python3 -m jevbench.cli summarize --tasks "$JEVBENCH_TASKS" \
-  --results "$JEVBENCH_OUTPUT/results.jsonl" \
-  --public-export "$JEVBENCH_OUTPUT/summary.json"
+python3 -B scripts/jevbench-local.py \
+  --binary "${CARGO_TARGET_DIR:-target}/release/llama-cpp-system-one" \
+  --model "$DIFFUSION_MODEL" \
+  --harness "$JEVBENCH_SOURCE" \
+  --output "benchmarks/results/jevbench-$(date -u +%Y-%m-%dT%H-%M-%SZ)"
 ```
 
-If the local service requires authentication, export its key as `LOCAL_TYPESAFE_API_KEY` and replace `--key-env ''` with `--key-env LOCAL_TYPESAFE_API_KEY`.
+The wrapper uses Python's standard library and disables authentication only for its own loopback service. It writes the upstream summary, per-case records, raw evidence, service log, and source/model hashes to the selected output directory. Use a new directory for each run. Raw evidence stays under gitignored `benchmarks/results/`.
 
-### Enable the think extension
+We verified all 231 task IDs and raw-response hashes and rescored each probability distribution with the pinned scorer. Formatting, workspace tests, Clippy, native inference tests, and HTTP smoke checks passed. Public case IDs and expected labels come from the [JevBench datasets](https://github.com/fstandhartinger/jevbench/tree/fd51755eb0c0b546ca206d764faf3302feca913e/datasets/public), under the [MIT license](LICENSE-jevbench).
 
-The pinned upstream TypeSafe adapter ignores `--request-options`. Use the repository's [wrapper](../../scripts/jevbench-think.py) to put `think` in the actual HTTP request. After the setup above, select a fresh output directory and run:
+Validation used the same HIP/native release configuration:
 
 ```bash
-JEVBENCH_OUTPUT="$PWD/benchmarks/results/jevbench-think1024-$(date -u +%Y-%m-%dT%H-%M-%SZ)"
-python3 -u scripts/jevbench-think.py --think 1024 --timeout-s 900 \
-  --tasks "$JEVBENCH_TASKS" \
-  --endpoint http://127.0.0.1:8080 --model gemmadiffusion-0.1 --key-env '' \
-  --cost-basis local_compute_unpriced --reserve-usd 0 --cap-usd 0 \
-  --results "$JEVBENCH_OUTPUT/results.jsonl" --raw-dir "$JEVBENCH_OUTPUT/raw" \
-  --ledger "$JEVBENCH_OUTPUT/ledger.jsonl" --manifest "$JEVBENCH_OUTPUT/manifest.json"
+cargo fmt --all -- --check
+cargo test --release --workspace --locked --features hip,native
+cargo clippy --release --workspace --all-targets --locked --features hip,native -- -D warnings
+cargo test --release -p llama-diffusion-structured --locked --features hip,native -- --ignored --nocapture --test-threads=1
 ```
 
-The wrapper keeps the upstream task prompts, scoring, serial scheduling, and no-retry policy. It records the thought budget and timeout in the manifest. The 900-second timeout accommodates thought generation; the baseline used 120 seconds. Requests must fit their prompt, full thought budget, and answer canvas inside the running service's context size. Context-limit errors count as failures in the benchmark. Use the same summarize command above after the run.
-
-The results snapshot retains per-case predictions, probabilities, expected labels, latency, usage, and evidence hashes. Raw requests/responses and the local harness copy remain under the gitignored `benchmarks/results/jevbench-2026-09-21T11-32-44Z/`; they are not required to read the saved results. Public task IDs and expected labels come from the [JevBench dataset](https://github.com/fstandhartinger/jevbench/tree/fd51755eb0c0b546ca206d764faf3302feca913e/datasets/public), under its [MIT license](LICENSE-jevbench).
-
-Validation: the upstream protocol suite passed 17 tests. All 231 task IDs and raw-response SHA-256 hashes matched the source evidence; the canonical task hash matched the run manifest. We did not compute a model-file hash. The snapshot records checkout identity and the reported build command, not an embedded binary build ID.
-
-## Hard-tier breakdown
-
-| Family | Correct |
-| --- | ---: |
-| adversarial | 6/6 (100.0%) |
-| ambiguous | 5/7 (71.4%) |
-| judge_hard | 11/17 (64.7%) |
-| long_policy | 7/19 (36.8%) |
-| multi_hop | 7/18 (38.9%) |
-| probability | 4/10 (40.0%) |
-| routing_hard | 5/5 (100.0%) |
-| temporal_numeric | 5/15 (33.3%) |
-| tradeoff | 2/6 (33.3%) |
-| trap | 6/8 (75.0%) |
+The four ignored native tests require `DIFFUSION_MODEL`, and the image test also requires `DIFFUSION_MMPROJ`. The local benchmark wrapper ran `scripts/smoke-test.py` after the timed cases and then stopped its service.

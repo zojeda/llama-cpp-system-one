@@ -48,7 +48,7 @@ flowchart LR
 
 The [compiler](../crates/system-one/src/compiler.rs) constructs the prompt and slot prefixes. The [inference engine](../crates/llama-diffusion-structured/src/engine.rs), with default text options, then:
 
-1. Wraps the prompt in DiffusionGemma's text chat markers and tokenizes it.
+1. Wraps the prompt in DiffusionGemma's text chat markers and tokenizes it. With `think=0`, it appends an empty, closed thought channel (`<|channel>thought\n<channel|>`) to the model-turn prefill.
 2. Appends fixed prefixes and one seeded random token per answer slot to the canvas.
 3. Prefills the prompt cache through `PKV_PREFILL`, in chunks up to the batch size.
 4. Evaluates the full canvas with one `PKV_DECODE` call.

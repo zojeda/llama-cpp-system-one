@@ -7,6 +7,8 @@ use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 use std::{collections::HashSet, time::Instant};
 
+const EMPTY_THOUGHT_CHANNEL: &str = "<|channel>thought\n<channel|>";
+
 pub struct Engine {
     native: Native,
     codes: Vec<String>,
@@ -142,14 +144,21 @@ impl Engine {
                 .max()
                 .unwrap_or(0)
         };
+        // Close the thought channel before reading answers when no thought was requested.
+        // Keep this in prefill so it does not change answer slots or canvas noise.
+        let mut suffix = if options.think == 0 {
+            self.native.tokenize(EMPTY_THOUGHT_CHANNEL, false, true)?
+        } else {
+            Vec::new()
+        };
         let thought_reserve = if options.think > 0 {
             options.think
                 + self
                     .native
-                    .tokenize("<|channel>thought\n<channel|>", false, true)?
+                    .tokenize(EMPTY_THOUGHT_CHANNEL, false, true)?
                     .len()
         } else {
-            0
+            suffix.len()
         };
         if base_length + canvas_reserve + thought_reserve > self.native.n_ctx {
             return Err(Error::InvalidInput(format!(
@@ -167,7 +176,6 @@ impl Engine {
             forward_ms: 0.0,
         };
         let mut batch = Batch::new(self.native.batch_size)?;
-        let mut suffix = Vec::new();
         if options.think > 0 {
             let thought = self.think(&parts, options.think, seed, &mut batch)?;
             suffix = thought.suffix;
@@ -601,6 +609,36 @@ mod tests {
         let mut engine = Engine::load(&config).unwrap();
         let request = ReadRequest::scm("Ground granulated blast furnace slag is used in concrete.");
         let first = engine.read(&request, 42).unwrap();
+        let expected_prompt_tokens: usize = [
+            ("<|turn>user\n", true, true),
+            (request.prompt.trim(), false, false),
+            ("<turn|>\n<|turn>model\n", false, true),
+            ("<|channel>thought\n<channel|>", false, true),
+        ]
+        .into_iter()
+        .map(|(text, special, parse)| engine.native.tokenize(text, special, parse).unwrap().len())
+        .sum();
+        assert_eq!(first.prompt_tokens, expected_prompt_tokens);
+        assert_eq!(first.output_tokens, 0);
+        assert_eq!(
+            first.slots[0].absolute_position,
+            expected_prompt_tokens + first.slots[0].canvas_position
+        );
+
+        // Lower the logical limit inside the allocated native context to check
+        // that framing is reserved before inference, including the exact boundary.
+        let context_size = engine.native.n_ctx;
+        engine.native.n_ctx = first.prompt_tokens + first.canvas_tokens - 1;
+        let error = engine.read(&request, 42).unwrap_err();
+        assert!(error.to_string().contains("context allows"));
+        engine.native.n_ctx += 1;
+        let exact_fit = engine.read(&request, 42).unwrap();
+        assert_eq!(exact_fit.prompt_tokens, first.prompt_tokens);
+        assert_eq!(
+            exact_fit.slots[0].probabilities,
+            first.slots[0].probabilities
+        );
+        engine.native.n_ctx = context_size;
         let other = ReadRequest::scm(
             "This is a different and longer material description: steel reinforcement bars carry tensile forces in a reinforced concrete structure.",
         );

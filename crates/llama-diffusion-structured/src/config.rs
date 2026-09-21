@@ -22,7 +22,7 @@ impl ModelConfig {
             mmproj: None,
             gpu_layers: -1,
             main_gpu: 0,
-            context_size: 4096,
+            context_size: 8192,
             batch_size: 512,
             threads: std::thread::available_parallelism().map_or(4, |n| n.get().min(8) as i32),
             flash_attention: false,

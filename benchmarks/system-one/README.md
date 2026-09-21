@@ -2,6 +2,66 @@
 
 [cases.json](cases.json) contains **72 synthetic requests with 84 scored questions** for comparing hosted TypeSafe with local llama-cpp-system-one. Both endpoints receive the same state and questions through `@typesafe-ai/sdk` 0.6.0 and the existing [JavaScript client factory](../../examples/javascript/client.mjs). Only the requested model ID differs. Expected answers, rationales, category names, and case IDs stay outside the wire request.
 
+## Recorded local results (2026-09-21)
+
+The local rerun evaluated all **72 requests and 84 questions**, scoring **75/84 (89.3%)** with **72/72 valid responses**. This is 10 more correct answers than the September 19 local baseline, an increase of 11.9 percentage points. The corpus SHA-256 is unchanged: `9440d653972988809d32ca96d1978cfaf880778bff09c18b0894b41383b70534`. Hosted TypeSafe was not rerun; its September 19 results remain below as historical context.
+
+| Metric | Local, Sep 21 | Local, Sep 19 | Hosted TypeSafe, Sep 19 |
+| --- | --- | --- | --- |
+| Valid responses | 72/72 | 72/72 | 71/72 |
+| Question accuracy | 75/84 (89.3%) | 65/84 (77.4%) | 80/84 (95.2%) |
+| Requests with every answer correct | 63/72 (87.5%) | 53/72 (73.6%) | 68/72 (94.4%) |
+| Mean latency, valid responses | 1,112.6 ms | 683.6 ms | 427.7 ms |
+| p50 latency, valid responses | 956.7 ms | 588.4 ms | 339.9 ms |
+| p95 latency, valid responses | 2,065.8 ms | 1,314.6 ms | 881.0 ms |
+| Mean latency, all attempts | 1,112.6 ms | 683.6 ms | 838.4 ms |
+| Failed requests | 0 | 0 | 1 timeout at 30.0 s |
+
+Question accuracy by category (correct/total):
+
+| Category | Local, Sep 21 | Local, Sep 19 | Hosted TypeSafe, Sep 19 |
+| --- | --- | --- | --- |
+| Policy | 7/8 | 7/8 | 8/8 |
+| Quantitative | 6/8 | 4/8 | 7/8 |
+| Temporal | 7/8 | 4/8 | 6/8 |
+| Evidence | 8/8 | 8/8 | 7/8 (one timeout) |
+| Multilingual | 8/8 | 8/8 | 8/8 |
+| Prompt injection | 7/8 | 7/8 | 8/8 |
+| Relational | 7/8 | 3/8 | 8/8 |
+| Rubric | 6/8 | 5/8 | 8/8 |
+| Context | 19/20 | 19/20 | 20/20 |
+
+The [saved snapshot](results-2026-09-21-defaults.json) includes all 72 response records, per-question evaluations, summary metrics, run settings, and binary/model hashes. Every saved response was re-scored against the corpus, and the summary was recomputed and checked for equality. The source was a clean tracked checkout at `11e826d9b32d9a4b5448485c1086ffb3e7c9a2d8`, built immediately before launching a dedicated service on port 8081.
+
+| Configuration | Value |
+| --- | --- |
+| Hardware / platform | AMD Ryzen AI MAX+ 395 / Radeon 8060S, WSL2 Linux |
+| Backend / build | ROCm 7.2.1, `gfx1151`, release, `hip,native`, `GGML_HIP_NO_VMM=ON` |
+| Native revision | `12e0a9627d02c6395fd4bbf2aadff93d0d46a0e4` |
+| Model | `diffusiongemma-26B-A4B-it-Q4_K_M.gguf`; SHA-256 `24523b6c833c9ce9f5f34f9b333ab1517d73d6f1e76a103645353114c8028bc5` |
+| Server | Context 8192, batch 512, 8 threads, seed 42, all GPU layers, flash attention off, no vision projector |
+| Request defaults | `steps=1`, `samples=1`, `think=0`, `sequential=false` |
+| Client | SDK 0.6.0, Node.js 24.19.0, returned model `gemmadiffusion-0.1` |
+| Measurement | One round, concurrency 1, shuffle seed 42, no warmups or retries, 30-second timeout, score tolerance ±0.5 |
+
+The service had no prior inference requests. Model loading, compilation, and model hashing finished before measurement; first-request inference overhead remains included. Another local service remained loaded on port 8080, and other machine activity was not controlled. The September 19 snapshot lacks hardware and quantization provenance. These timings measure SDK latency and cannot isolate a speed change caused by the inference implementation.
+
+To reproduce, first configure the [ROCm build/runtime environment](../../docs/build.md#rocmhip) and `DIFFUSION_MODEL`, then start a dedicated service:
+
+```bash
+env -u TYPESAFE_API_KEY -u DIFFUSION_MMPROJ \
+  cargo run --release --locked -p llama-cpp-system-one --features hip,native -- \
+  -m "$DIFFUSION_MODEL" --bind 127.0.0.1:8081 \
+  --context-size 8192 --batch-size 512 --seed 42 --threads 8
+```
+
+After the service reports ready, run from the repository root in another terminal:
+
+```bash
+node examples/javascript/benchmark.mjs --endpoint local \
+  --local-url http://127.0.0.1:8081 --timeout-ms 30000
+```
+
 ## Recorded results (2026-09-19)
 
 The full run starting at 14:30 UTC evaluated **72 requests and 84 questions per endpoint**, using SDK 0.6.0 and Node.js 24.19.0. It used one measured round, concurrency one, shuffle seed 42, no benchmark warmups or retries, and a 30-second per-call timeout. The returned model IDs were `gemmadiffusion-0.1` locally and `jev-1.13.0` on hosted TypeSafe. The [saved results snapshot](results-2026-09-19.json) preserves the run settings, corpus hash, returned model IDs, and summary metrics.
@@ -95,7 +155,7 @@ Every category has eight cases. Policies, rubrics, and relevant facts are suppli
 | `rubric` | Eight objectively anchored severity and report-completeness scores, spanning all four levels |
 | `context` | Matched short/long states and one/four-question requests, with relevant evidence among distractors |
 
-There are 50 choice questions, 22 noul questions, and 12 score questions. Context cases deliberately repeat facts while changing context length and question count. They test consistency and latency scaling, so the 72 cases are not 72 statistically independent samples. “Long” means longer than the matched baseline (roughly 3 KB of text), not a maximum-context stress test. The four-question canvas is intended to work with the default local 512-token batch and 4096-token context; tokenization and capacity errors are recorded as failures.
+There are 50 choice questions, 22 noul questions, and 12 score questions. Context cases deliberately repeat facts while changing context length and question count. They test consistency and latency scaling, so the 72 cases are not 72 statistically independent samples. “Long” means longer than the matched baseline (roughly 3 KB of text), not a maximum-context stress test. The four-question canvas is intended to work with the default local 512-token batch and 8192-token context; tokenization and capacity errors are recorded as failures.
 
 Each entry has a directly usable `request` object, an `expected` map keyed by question ID, and a human-readable `rationale`. To try one manually, send only its `request` and substitute the model ID as needed. Score targets are zero-based rubric levels. Keep ground truth out of `state` and question IDs when adding cases. The loader refuses corpora with more than 100 cases or inconsistent answer keys.
 
