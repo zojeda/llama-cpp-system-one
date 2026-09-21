@@ -62,7 +62,35 @@ Try the [hot dog photo example](docs/api.md#hot-dog-photo), including the [bundl
 
 Use [JavaScript SDK examples](examples/javascript/README.md) for application code. The [API reference](docs/api.md) covers request types, model aliases, and errors. Use the [extensions](docs/api.md#extensions) for `steps`, `samples`, `think`, `sequential`, and `images`. Text defaults remain `steps=1`, `samples=1`, and `think=0`; image requests require `--mmproj` or `DIFFUSION_MMPROJ`.
 
-## Benchmark
+## Benchmarks
+
+### JevBench public cases
+
+On 2026-09-21, we ran all **231 public JevBench cases** against DiffusionGemma Q4_K_M on an AMD Ryzen AI MAX+ 395 / Radeon 8060S, using a HIP/native release build. Both runs used one request at a time, with no benchmark warmups or retries.
+
+| Local configuration | Easy (48) | Standard (72) | Hard (111) | Overall (231) | Valid responses |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `think=0` | 91.7% | 87.5% | 52.3% | **165/231 (71.4%)** | 231/231 |
+| `think=1024` | 100.0% | 95.8% | 60.4% | **184/231 (79.7%)** | 223/231 |
+
+Thinking fixed 28 baseline errors and lost 9 previously correct answers: **19 more correct answers, or +8.2 percentage points**. Eight long requests exceeded the unchanged 4,096-token context after reserving the thought budget; those count as incorrect.
+
+The comparison below uses the same 231 public case IDs for accuracy and latency. Published reference models were not rerun here; their figures come from [Benchmark Heaven's pinned per-case results](https://github.com/fstandhartinger/jevbench/blob/fd51755eb0c0b546ca206d764faf3302feca913e/results/v1.2/jevbench-v1.2-per-task.json).
+
+| Model / configuration | Correct | Accuracy | p50 latency | p95 latency |
+| --- | ---: | ---: | ---: | ---: |
+| Jev 1.13.0 (TypeSafe AI) | 200/231 | 86.6% | 0.665 s | 0.803 s |
+| djev (Maisa, DiffusionGemma) | 194/231 | 84.0% | 0.239 s | 0.354 s |
+| OpenJev (DiffusionGemma NVFP4, razorback16) | 189/231 | 81.8% | 0.246 s | 0.459 s |
+| SemIf (Qwen3.5-4B, TheoLeeCJ) | 187/231 | 81.0% | 0.194 s | 0.538 s |
+| **Local Q4_K_M, `think=1024`** | **184/231** | **79.7%** | **17.204 s** | **35.569 s** |
+| **Local Q4_K_M, `think=0`** | **165/231** | **71.4%** | **0.914 s** | **7.417 s** |
+
+Latencies are raw caller wall times over all attempts, including failures, with no production-load adjustment. p50 is the median; p95 is the 95th percentile. Reference percentiles use linear interpolation over published per-case timings rounded to milliseconds. Local requests used loopback; Benchmark Heaven measured its deployments from Germany. Hardware, network paths, quantization, and inference settings differ, so these timings do not isolate model speed. Excluding the eight rejected requests, the thinking run's p50/p95 were **17.688/36.182 seconds**.
+
+This subset excludes 303 decisions from the full benchmark and does not establish an official leaderboard score. See the [benchmark report and reproduction commands](benchmarks/jevbench/README.md), [thinking comparison](benchmarks/jevbench/think1024-2026-09-21.md), and data snapshots for [think=0](benchmarks/jevbench/results-2026-09-21.json) and [think=1024](benchmarks/jevbench/results-2026-09-21-think1024.json).
+
+### System One comparison corpus
 
 On 2026-09-19, we compared 72 requests and 84 questions per endpoint in one round, with concurrency one and no benchmark warmups or retries.
 
@@ -84,4 +112,5 @@ The hosted endpoint timed out once at 30 seconds. We count that answer as incorr
 | [Diffusion and canvas inference](docs/inference.md) | Denoising, answer slots, probability math |
 | [HTTP API](docs/api.md) | Question types, authentication, limits, errors |
 | [Development](docs/development.md) | Crate layout, tests, recipes, SCM CLI |
-| [Benchmark](benchmarks/system-one/README.md) | Results, corpus, scoring, runner settings |
+| [JevBench](benchmarks/jevbench/README.md) | Public benchmark results, published comparisons, reproduction commands |
+| [System One comparison](benchmarks/system-one/README.md) | Synthetic corpus, local/hosted results, scoring, runner settings |
