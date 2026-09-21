@@ -72,7 +72,7 @@ Both inference binaries accept these options:
 | --- | --- | --- |
 | `--gpu-layers` | `-1` | Offload all layers; use `0` for CPU. |
 | `--main-gpu` | `0` | Select the GPU. |
-| `--context-size` | `4096` | Limit prompt plus canvas tokens. |
+| `--context-size` | `8192` | Limit prompt, reserved thought budget, and canvas tokens. Larger contexts allocate more cache memory. |
 | `--batch-size` | `512` | Limit each prefill chunk and the full canvas. |
 | `--seed` | `42` | Seed the initial answer-slot noise. |
 | `--flash-attention` | Off | Enable with a supported native backend. |

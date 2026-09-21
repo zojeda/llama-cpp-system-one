@@ -1,0 +1,106 @@
+{
+  "source_run": "benchmarks/results/research-thinking",
+  "scope": "Completed legacy_think1024 arm within completed nine-arm development run; original Q4, seed 42, context 8192; not full-set confirmation",
+  "summary": {
+    "arm": "legacy_think1024",
+    "seed": 42,
+    "total": 32,
+    "correct": 27,
+    "valid": 32,
+    "p50_s": 21.702570021,
+    "p95_s": 36.5773872276,
+    "valid_p50_s": 21.702570021,
+    "valid_p95_s": 36.5773872276
+  },
+  "control": {
+    "arm": "empty_thought_prefill",
+    "seed": 42,
+    "total": 32,
+    "correct": 27,
+    "valid": 32,
+    "p50_s": 1.0487954685,
+    "p95_s": 8.185793097949999,
+    "valid_p50_s": 1.0487954685,
+    "valid_p95_s": 8.185793097949999
+  },
+  "fixed_ids": [],
+  "regressed_ids": [],
+  "output_token_histogram": {
+    "4": 29,
+    "1024": 1,
+    "1": 2
+  },
+  "four_token_header_audit": {
+    "ids": [
+      "easy-intent-05",
+      "easy-fact-03",
+      "easy-fact-04",
+      "easy-fact-08",
+      "easy-fact-11",
+      "easy-extraction-01",
+      "easy-extraction-02",
+      "original-policy-06-0",
+      "original-intent-02-0",
+      "original-intent-05-1",
+      "original-ordinal-01-1",
+      "original-ordinal-03-0",
+      "original-ordinal-03-1",
+      "original-ordinal-05-1",
+      "original-extraction-02-1",
+      "original-extraction-05-0",
+      "original-adequacy-04-0",
+      "original-adequacy-05-1",
+      "original-adequacy-06-0",
+      "hard-opus-a-long_policy-09",
+      "hard-opus-a-long_policy-13",
+      "hard-opus-a-probability-08",
+      "hard-opus-a-temporal_numeric-06",
+      "hard-opus-a-temporal_numeric-12",
+      "hard-opus-b-ambiguous-03",
+      "hard-opus-b-tradeoff-07",
+      "hard-opus-c-long_policy-08",
+      "hard-sol-b-judge_hard-01",
+      "hard-sol-b-temporal_numeric-03"
+    ],
+    "empty_header_token_ids": [
+      100,
+      45518,
+      107,
+      101
+    ],
+    "generated_thinking_suffix_token_ids": [
+      100,
+      45518,
+      107,
+      100,
+      45518,
+      107,
+      101
+    ],
+    "verification": "Every four-token case had exactly the control prompt with an additional open-channel/thought/newline sequence before the final close token. No other thought text occurred in those cases."
+  },
+  "phase_totals": {
+    "prefill_ms": 158879.19315,
+    "decode_ms": 286184.500522,
+    "logits_copy_ms": 31752.46426,
+    "sampling_ms": 200092.35796,
+    "entropy_ms": 0.0,
+    "decode_calls": 730
+  },
+  "share_of_wall_percent": {
+    "prefill_ms": 23.279626873457055,
+    "decode_ms": 41.932919327132396,
+    "logits_copy_ms": 4.652500466739566,
+    "sampling_ms": 29.318347740734385,
+    "entropy_ms": 0.0
+  },
+  "median_phase": {
+    "prefill_ms": 1771.5002215,
+    "decode_ms": 10690.234139,
+    "logits_copy_ms": 1116.9583499999999,
+    "sampling_ms": 7341.4887285,
+    "entropy_ms": 0.0,
+    "decode_calls": 27.0
+  },
+  "run_complete": true
+}

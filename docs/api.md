@@ -9,7 +9,7 @@ export TYPESAFE_API_KEY="local-development-key"
 cargo run --release --locked -p llama-cpp-system-one -- \
   -m "$DIFFUSION_MODEL" \
   --bind 127.0.0.1:8080 \
-  --context-size 4096 --batch-size 512 --seed 42
+  --context-size 8192 --batch-size 512 --seed 42
 ```
 
 For AMD GPUs, add `--features hip,native` before `--` after following the [ROCm setup](build.md#rocmhip).
@@ -75,6 +75,8 @@ These fields follow [OpenJEV's extension API](https://github.com/razorback16/ope
 | `images` | up to 8 / empty | Put images before the state. Accept JPEG, PNG, WebP, and GIF, up to 5 MiB of decoded base64 data per image. Animated formats use their first frame. |
 
 Images cannot be combined with `think > 0` or `sequential=true`; these combinations return `422`. Structured JSON state remains supported with text extensions. More steps, samples, or thought tokens increase compute and queue latency; they do not guarantee better answers.
+
+At `think=0`, the server caches an empty thought-channel header before reading answers. It generates no thought tokens, so `usage.output_tokens` remains zero. A positive `think` budget uses generated thinking in place of that empty header.
 
 Try the [text extensions example](../examples/system-one-extensions.json):
 
@@ -151,7 +153,7 @@ The response includes `answers.hotdog.noul` (the probability of a hot dog) and `
 
 The server accepts bodies up to 64 MiB, accommodating eight base64-encoded 5 MiB images plus request text. Image decoding is limited to 8192 pixels per side, 16 megapixels, and a 64 MiB decoder allocation budget. Malformed images return `422`.
 
-Question templates are split at question boundaries into canvases of at most 64 tokens (or `--batch-size`, if smaller). Each image's patch block must fit in one batch for bidirectional attention. Prompt, reserved thought budget, and canvas must fit in `--context-size`; sequential requests also reserve space for earlier answers. The batch and context defaults are 512 and 4096. Oversized requests return `422`; increase the relevant server limit if needed.
+Question templates are split at question boundaries into canvases of at most 64 tokens (or `--batch-size`, if smaller). Each image's patch block must fit in one batch for bidirectional attention. Prompt, reserved thought budget, and canvas must fit in `--context-size`; sequential requests also reserve space for earlier answers. The batch and context defaults are 512 and 8192. Oversized requests return `422`; increase the relevant server limit if needed. Larger contexts allocate more cache memory.
 
 `usage.input_tokens` sums prompt and canvas tokens across explicitly requested samples and question chunks, including image tokens and any thought prefix. Steps reuse the same tokens and do not multiply this count. Thought generation adds each generation block's prompt tokens to input usage; generated thought tokens count toward `usage.output_tokens`. No thought means zero output tokens. Usage describes logical reads even when the prompt cache is reused between samples.
 

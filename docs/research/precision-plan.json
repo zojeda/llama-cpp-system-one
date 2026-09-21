@@ -1,0 +1,29 @@
+{
+  "legacy": {
+    "layout": {
+      "capture_trace": true
+    }
+  },
+  "prefill": {
+    "layout": {
+      "prefill_suffix": "<|channel>thought\n<channel|>",
+      "capture_trace": true
+    }
+  },
+  "context_legacy": {
+    "layout": {
+      "contextual_tokens": true,
+      "capture_trace": true
+    }
+  },
+  "context_openjev": {
+    "openjev_wording": true,
+    "layout": {
+      "canvas_prefix": "<|channel>thought\n<channel|>",
+      "canvas_suffix": "<turn|>",
+      "pad_to": 16,
+      "contextual_tokens": true,
+      "capture_trace": true
+    }
+  }
+}

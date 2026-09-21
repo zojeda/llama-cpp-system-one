@@ -1,0 +1,275 @@
+{
+  "baseline_commit": "d023974",
+  "scope": "Static analysis of saved public benchmark runs; no new inference",
+  "local_comparisons": {
+    "1": {
+      "output_tokens": 1,
+      "n": 8,
+      "fixed": 2,
+      "regressed": 1
+    },
+    "4": {
+      "output_tokens": 4,
+      "n": 209,
+      "fixed": 26,
+      "regressed": 5
+    },
+    "5": {
+      "output_tokens": 5,
+      "n": 1,
+      "fixed": 0,
+      "regressed": 0
+    },
+    "1024": {
+      "output_tokens": 1024,
+      "n": 5,
+      "fixed": 0,
+      "regressed": 0
+    }
+  },
+  "reference_disagreements": {
+    "djev": {
+      "reference_only_correct": 39,
+      "local_only_correct": 10,
+      "both_wrong": 27,
+      "per_family": {
+        "adequacy": {
+          "n": 12,
+          "local_correct": 8,
+          "reference_correct": 11
+        },
+        "adversarial": {
+          "n": 6,
+          "local_correct": 6,
+          "reference_correct": 6
+        },
+        "ambiguous": {
+          "n": 7,
+          "local_correct": 5,
+          "reference_correct": 5
+        },
+        "extraction": {
+          "n": 24,
+          "local_correct": 23,
+          "reference_correct": 24
+        },
+        "fact": {
+          "n": 12,
+          "local_correct": 9,
+          "reference_correct": 12
+        },
+        "intent": {
+          "n": 24,
+          "local_correct": 21,
+          "reference_correct": 24
+        },
+        "judge_hard": {
+          "n": 17,
+          "local_correct": 11,
+          "reference_correct": 14
+        },
+        "long_policy": {
+          "n": 19,
+          "local_correct": 7,
+          "reference_correct": 10
+        },
+        "multi_hop": {
+          "n": 18,
+          "local_correct": 7,
+          "reference_correct": 15
+        },
+        "ordinal": {
+          "n": 12,
+          "local_correct": 12,
+          "reference_correct": 12
+        },
+        "policy": {
+          "n": 12,
+          "local_correct": 11,
+          "reference_correct": 12
+        },
+        "probability": {
+          "n": 10,
+          "local_correct": 4,
+          "reference_correct": 6
+        },
+        "routing": {
+          "n": 12,
+          "local_correct": 12,
+          "reference_correct": 12
+        },
+        "routing_hard": {
+          "n": 5,
+          "local_correct": 5,
+          "reference_correct": 5
+        },
+        "temporal_numeric": {
+          "n": 15,
+          "local_correct": 5,
+          "reference_correct": 4
+        },
+        "tool_selection": {
+          "n": 12,
+          "local_correct": 11,
+          "reference_correct": 12
+        },
+        "tradeoff": {
+          "n": 6,
+          "local_correct": 2,
+          "reference_correct": 3
+        },
+        "trap": {
+          "n": 8,
+          "local_correct": 6,
+          "reference_correct": 7
+        }
+      }
+    },
+    "openjev-razorback16": {
+      "reference_only_correct": 38,
+      "local_only_correct": 14,
+      "both_wrong": 28,
+      "per_family": {
+        "adequacy": {
+          "n": 12,
+          "local_correct": 8,
+          "reference_correct": 11
+        },
+        "adversarial": {
+          "n": 6,
+          "local_correct": 6,
+          "reference_correct": 6
+        },
+        "ambiguous": {
+          "n": 7,
+          "local_correct": 5,
+          "reference_correct": 5
+        },
+        "extraction": {
+          "n": 24,
+          "local_correct": 23,
+          "reference_correct": 24
+        },
+        "fact": {
+          "n": 12,
+          "local_correct": 9,
+          "reference_correct": 12
+        },
+        "intent": {
+          "n": 24,
+          "local_correct": 21,
+          "reference_correct": 24
+        },
+        "judge_hard": {
+          "n": 17,
+          "local_correct": 11,
+          "reference_correct": 14
+        },
+        "long_policy": {
+          "n": 19,
+          "local_correct": 7,
+          "reference_correct": 10
+        },
+        "multi_hop": {
+          "n": 18,
+          "local_correct": 7,
+          "reference_correct": 15
+        },
+        "ordinal": {
+          "n": 12,
+          "local_correct": 12,
+          "reference_correct": 12
+        },
+        "policy": {
+          "n": 12,
+          "local_correct": 11,
+          "reference_correct": 12
+        },
+        "probability": {
+          "n": 10,
+          "local_correct": 4,
+          "reference_correct": 5
+        },
+        "routing": {
+          "n": 12,
+          "local_correct": 12,
+          "reference_correct": 11
+        },
+        "routing_hard": {
+          "n": 5,
+          "local_correct": 5,
+          "reference_correct": 5
+        },
+        "temporal_numeric": {
+          "n": 15,
+          "local_correct": 5,
+          "reference_correct": 2
+        },
+        "tool_selection": {
+          "n": 12,
+          "local_correct": 11,
+          "reference_correct": 12
+        },
+        "tradeoff": {
+          "n": 6,
+          "local_correct": 2,
+          "reference_correct": 2
+        },
+        "trap": {
+          "n": 8,
+          "local_correct": 6,
+          "reference_correct": 7
+        }
+      }
+    }
+  },
+  "model_metadata": {
+    "model_file": "diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+    "gguf_version": 3,
+    "tensor_count": 692,
+    "tensor_type_counts": {
+      "0": 423,
+      "6": 33,
+      "12": 194,
+      "14": 14,
+      "8": 28
+    },
+    "metadata": {
+      "general.architecture": "diffusion-gemma",
+      "general.name": "Dg_Rc0P1_Patched",
+      "tokenizer.ggml.model": "gemma4",
+      "tokenizer.ggml.tokens": {
+        "count": 262144,
+        "selected_tokens": {
+          "<pad>": 0,
+          "<bos>": 2,
+          "<mask>": 4,
+          "<|channel>": 100,
+          "<channel|>": 101,
+          "<|turn>": 105,
+          "<turn|>": 106,
+          "no": 1904,
+          "yes": 4443,
+          "1": 236770,
+          "0": 236771,
+          "A": 236776,
+          "B": 236799
+        }
+      },
+      "tokenizer.ggml.bos_token_id": 2,
+      "tokenizer.ggml.eos_token_id": 1,
+      "tokenizer.ggml.add_bos_token": true,
+      "general.quantization_version": 2,
+      "general.file_type": 15
+    },
+    "tensor_types": {
+      "F32": 423,
+      "Q5_0": 33,
+      "Q4_K": 194,
+      "Q6_K": 14,
+      "Q8_0": 28
+    },
+    "embedding_ggml_type": "Q6_K",
+    "inspection_note": "Read GGUF header and tensor descriptors only; no tensor payload or model-file hash. Header does not establish immutable HF source revision."
+  }
+}

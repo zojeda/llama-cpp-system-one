@@ -18,4 +18,7 @@ pub use config::ModelConfig;
 pub use engine::Engine;
 pub use error::{Error, Result};
 pub use probability::restricted_softmax;
-pub use read::{ImageInput, ReadOptions, ReadRequest, ReadResult, Slot, SlotRead};
+pub use read::{
+    ImageInput, ReadLayout, ReadOptions, ReadProfile, ReadRequest, ReadResult, ReadTrace, Slot,
+    SlotRead,
+};

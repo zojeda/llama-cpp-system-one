@@ -24,9 +24,5 @@
         "Commonly used for this purpose"
       ]
     }
-  },
-  "steps": 1,
-  "samples": 1,
-  "think": 0,
-  "sequential": false
+  }
 }

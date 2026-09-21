@@ -1,0 +1,188 @@
+{
+  "checks": [
+    {
+      "name": "format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "started": 1790018923.7148838,
+      "finished": 1790018923.9916968,
+      "returncode": 0
+    },
+    {
+      "name": "tests",
+      "command": [
+        "cargo",
+        "test",
+        "--release",
+        "--workspace",
+        "--locked",
+        "--features",
+        "hip,native"
+      ],
+      "started": 1790018923.993261,
+      "finished": 1790018939.1887543,
+      "returncode": 0
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--release",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--features",
+        "hip,native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "started": 1790018939.189233,
+      "finished": 1790018940.209812,
+      "returncode": 0
+    },
+    {
+      "name": "native",
+      "command": [
+        "cargo",
+        "test",
+        "--release",
+        "-p",
+        "llama-diffusion-structured",
+        "--locked",
+        "--features",
+        "hip,native",
+        "--",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "started": 1790018940.2103784,
+      "finished": 1790019097.5026593,
+      "returncode": 0
+    },
+    {
+      "name": "server-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "-p",
+        "llama-cpp-system-one",
+        "--features",
+        "hip,native"
+      ],
+      "started": 1790019097.5032606,
+      "finished": 1790019105.0316224,
+      "returncode": 0
+    }
+  ],
+  "backend": "HIP gfx1151, native release",
+  "regular_tests": 22,
+  "native_model_tests": 4,
+  "model": "diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+  "projector": "mmproj-diffusiongemma-26b-a4b-f16.gguf",
+  "source_sha256": {
+    "crates/llama-cpp-system-one/src/error.rs": "f5ee7dae6de749dc44f6531d42a8c539b459033d00c36334520e55409f93d9a6",
+    "crates/llama-cpp-system-one/src/handlers.rs": "a53936f93a70bda8f2de473d488e5ecec75cd143ca6e1882c9689f8340a7c5dc",
+    "crates/llama-cpp-system-one/src/http.rs": "604c886753ee826234e92220d46d6866592e7e079acbf045ddd61dfdbe0e9e03",
+    "crates/llama-cpp-system-one/src/lib.rs": "77b27a1d69ff168d1b67b1ac1ec80e50f827ca42612e1ac6b36302d5d1fe1855",
+    "crates/llama-cpp-system-one/src/main.rs": "5e6ed7503b6dd03fd8438c8a221bdc5fce4de2086ae45cca54f67a43b20d6032",
+    "crates/llama-cpp-system-one/src/middleware.rs": "67ba28ea0956305bf2416a064301021816bcc9479e6bb9445d11ded1b5c5811b",
+    "crates/llama-cpp-system-one/src/worker.rs": "24b38f8dcab046d4b5a5f19b7accf16dec05a57089086589198824943326972f",
+    "crates/llama-diffusion-structured/src/config.rs": "7ac6546d8e6bb34b189524edb4dfbb5cb0dbd93751bba16bd3d47af020a8281a",
+    "crates/llama-diffusion-structured/src/denoise.rs": "ad51baa5623375c1e03d00348c3e4c0f1787f016d8630fe4ab9ee15cbd20ecc9",
+    "crates/llama-diffusion-structured/src/engine.rs": "3ed37d062f3adcaef8e5ea6abeac146809949668c59cfee246b1bdf413ff61c4",
+    "crates/llama-diffusion-structured/src/error.rs": "2aef8498ae8730740d8c49fbe262a5563f67c452ea3380dbb46a413d174d892a",
+    "crates/llama-diffusion-structured/src/images.rs": "0178fb84b1e7e3736be9e4b6a92a6155eb44fe53569c829402f6bc3e299e9af6",
+    "crates/llama-diffusion-structured/src/lib.rs": "47bed6ff601aac137543b27b6496db40d9287085ab390b78fa7c9af675ed8de3",
+    "crates/llama-diffusion-structured/src/main.rs": "e147d1e10205909e28e68c41f01e6e22a96809168e1b7f4648a3750ee7b1e19e",
+    "crates/llama-diffusion-structured/src/native.rs": "a468addaa9d9633d26d01521b1c9f4cd52ce0d8267e48af785bb49785fb8526b",
+    "crates/llama-diffusion-structured/src/probability.rs": "0b8fd11f3dfcecfe1d55adf0f517b73bda1cd3e0380bae580e0650534e5396f2",
+    "crates/llama-diffusion-structured/src/read.rs": "7fd4a506f59b931ee60f71a9931e3adde649c5d6410abba9d7546f94c32f4b0e",
+    "crates/llama-diffusion-sys/src/lib.rs": "60edb49770a09764f858a98a8525775ae788b1c23ef68bd2281bcba5c0b899c3",
+    "crates/system-one/src/compiler.rs": "9a6edfdbefffcce6d1354180245438573d15763cb50290e623489e46cf65877d",
+    "crates/system-one/src/error.rs": "b2efe6d72f9077a8c6fa0b658ec6beaeda9fe3bd05508e5badbe777fab92495a",
+    "crates/system-one/src/lib.rs": "fbdca0b3896f738c79fe83ae09f592117b2f1b8b9443290aee7d574f763af483",
+    "crates/system-one/src/request.rs": "38a670b01d61978eb772627d73fdb11dc4fb0742a207c795f796259a0b40d911",
+    "crates/system-one/src/response.rs": "78bf094acedf7046c60f5770755a861b3adaaf64e295c456a6f6b178f4e19d4a",
+    "crates/llama-cpp-system-one/examples/research.rs": "61533d8b60f4a100e09e17231b6eaa8b69d2a22967d2e21696e78e83df8232db",
+    "Cargo.toml": "b184bf949fa86f3720fec9326d05a5f1cc01a26c6b671b5ba4fceca22dffaa46",
+    "Cargo.lock": "7172fca11518776e3d530a90462c994fa8a01d64b13eca4e017b2ba41bec160e"
+  },
+  "logs": {
+    "format": {
+      "path": "benchmarks/results/research-candidate-validation/format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tests": {
+      "path": "benchmarks/results/research-candidate-validation/tests.log",
+      "sha256": "32b4cbc3dad08cd16857f046e499bf4d973bc2f39b1e514b11d2437515750c4b"
+    },
+    "clippy": {
+      "path": "benchmarks/results/research-candidate-validation/clippy.log",
+      "sha256": "3001c6973df84f71d52634a6a50b2537f28ab2de30c1a809c55cc6b6b57d7cc4"
+    },
+    "native": {
+      "path": "benchmarks/results/research-candidate-validation/native.log",
+      "sha256": "cf84cc22728034f465b992869a84284918b75d9fa1464785d4482a3fce1ee333"
+    },
+    "server-build": {
+      "path": "benchmarks/results/research-candidate-validation/server-build.log",
+      "sha256": "792c0dd73df6a16f8ff3e01dcb5042990c45165386e7730a7d706f1ad02c7458"
+    }
+  },
+  "baseline_binary": {
+    "binary_sha256": "89fa70eb9dd077c7387445f6eae3e6167153c0ab52d0a6d5db7f5c003bf1fc03",
+    "size_bytes": 86665688,
+    "source_mtime_ns": 1789990093392557714,
+    "note": "Preserved original server executable before building production changes. Final HTTP baseline must reproduce saved probabilities before comparison."
+  },
+  "candidate_binary_sha256": "9dc33b400f82fa879c845ff1f32cbf85d38f14a67861febfa2c608e6b9db291c",
+  "http": {
+    "baseline": {
+      "summary": {
+        "arm": "baseline",
+        "seed": 42,
+        "total": 231,
+        "correct": 165,
+        "valid": 231,
+        "p50_s": 0.8470880340028089,
+        "p95_s": 8.589322928000911,
+        "valid_p50_s": 0.8470880340028089,
+        "valid_p95_s": 8.589322928000911,
+        "over_120s_ids": []
+      },
+      "completed": 1790019631.858633,
+      "smoke_test": "passed",
+      "smoke_log_sha256": "b88c79c99ea694b795054c881ac1bd358ac9f8a6f2ee7f2901e1286d62ca485e",
+      "probability_parity": "exact on all 231 cases"
+    },
+    "candidate": {
+      "summary": {
+        "arm": "candidate",
+        "seed": 42,
+        "total": 231,
+        "correct": 189,
+        "valid": 231,
+        "p50_s": 1.0087421489952249,
+        "p95_s": 9.381222725998668,
+        "valid_p50_s": 1.0087421489952249,
+        "valid_p95_s": 9.381222725998668,
+        "over_120s_ids": []
+      },
+      "completed": 1790020200.6904998,
+      "smoke_test": "passed",
+      "smoke_log_sha256": "4057f1bb336ec8218f618c890fe1cd1289576a25fdec8ddd0c2e731015c5dd4c",
+      "probability_parity": "exact on all 231 cases"
+    }
+  },
+  "final_source_hash_verification": "passed; implementation unchanged since tests"
+}

@@ -143,6 +143,7 @@ pub(crate) struct Native {
     pub mask: i32,
     pub n_ctx: usize,
     pub batch_size: usize,
+    pub skip_zero_self_conditioning: bool,
     output_rows: usize,
 }
 
@@ -262,6 +263,7 @@ impl Native {
             n_ctx,
             batch_size,
             output_rows: 0,
+            skip_zero_self_conditioning: false,
         })
     }
 
@@ -542,9 +544,17 @@ impl Native {
 
     pub fn canvas_phase(&mut self, prompt_length: usize) {
         // SAFETY: prefill has populated this model's cache, and access is exclusive.
+        // No previous-logit pointer is retained. Disabling SC here preserves the native
+        // first-step post-RMSNorm; decode_canvas re-enables SC when previous logits exist.
         unsafe {
             ffi::llama_diffusion_set_phase(self.model.ptr.as_ptr(), 2, prompt_length as i32, 0);
-            ffi::llama_diffusion_set_sc(self.model.ptr.as_ptr(), std::ptr::null(), 0.0, 1.0, true);
+            ffi::llama_diffusion_set_sc(
+                self.model.ptr.as_ptr(),
+                std::ptr::null(),
+                0.0,
+                1.0,
+                !self.skip_zero_self_conditioning,
+            );
         }
     }
 

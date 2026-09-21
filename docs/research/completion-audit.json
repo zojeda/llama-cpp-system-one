@@ -1,0 +1,133 @@
+{
+  "in_process_evaluations": 4938,
+  "http_evaluations": 462,
+  "total_evaluations": 5400,
+  "runs": [
+    {
+      "run": "benchmarks/results/research-e0-4096",
+      "records": 231,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    },
+    {
+      "run": "benchmarks/results/research-first-sweep",
+      "records": 775,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    },
+    {
+      "run": "benchmarks/results/research-contextual-followup",
+      "records": 352,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    },
+    {
+      "run": "benchmarks/results/research-precision-q8",
+      "records": 128,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    },
+    {
+      "run": "benchmarks/results/research-precision-derived-q4",
+      "records": 128,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    },
+    {
+      "run": "benchmarks/results/research-precision-original-q4",
+      "records": 128,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    },
+    {
+      "run": "benchmarks/results/research-confirmation-42",
+      "records": 924,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    },
+    {
+      "run": "benchmarks/results/research-confirmation-additional-seeds",
+      "records": 1848,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    },
+    {
+      "run": "benchmarks/results/research-thinking",
+      "records": 288,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    },
+    {
+      "run": "benchmarks/results/research-thinking-context-regressions",
+      "records": 8,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    },
+    {
+      "run": "benchmarks/results/research-flash-attention",
+      "records": 128,
+      "manifest_expected_ids": "exact",
+      "raw_export_parity": "exact",
+      "summary_and_strata": "verified"
+    }
+  ],
+  "final_source_matches_tested_source": true,
+  "http_probability_parity": "all 462 responses exact against their research arms",
+  "python_syntax": "passed",
+  "local_document_links": "all resolve",
+  "scope": "E0\u2013E8 and production acceptance; development pilots receive full confirmation only where justified; public subset is not a holdout or the official full leaderboard",
+  "requirements": {
+    "reference_investigation": [
+      "djev.md",
+      "openjev.md"
+    ],
+    "E0": [
+      "experiment-results.json",
+      "context-regression-results.json"
+    ],
+    "E1": [
+      "confirmation-results.json",
+      "framing-comparison.json"
+    ],
+    "E2_E3_E4": [
+      "experiment-results.json",
+      "confirmation-additional-context-paired.json"
+    ],
+    "E5_E7": [
+      "thinking-results.json",
+      "prefill-refinement-development.json",
+      "thinking-template-development.json"
+    ],
+    "E6": [
+      "precision-results.json",
+      "precision-sources.json"
+    ],
+    "E8": [
+      "no-thinking-phase-profile.json",
+      "flash-attention-results.json",
+      "flash-attention-profile.json"
+    ],
+    "implementation_and_validation": [
+      "validation-results.json",
+      "http-results.json"
+    ],
+    "documentation": [
+      "../../README.md",
+      "README.md",
+      "experiments.md",
+      "../api.md",
+      "../inference.md",
+      "../build.md"
+    ]
+  }
+}

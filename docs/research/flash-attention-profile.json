@@ -1,0 +1,94 @@
+{
+  "precision-original-q4": {
+    "legacy": {
+      "phase_totals": {
+        "prefill_ms": 53186.646635,
+        "decode_ms": 4139.52541,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "wall_s": 57.521000164
+    },
+    "prefill": {
+      "phase_totals": {
+        "prefill_ms": 56244.544205,
+        "decode_ms": 4307.013994,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "wall_s": 60.752205691
+    },
+    "context_legacy": {
+      "phase_totals": {
+        "prefill_ms": 53040.45362,
+        "decode_ms": 4011.995893,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "wall_s": 57.250232792
+    },
+    "context_openjev": {
+      "phase_totals": {
+        "prefill_ms": 62099.272071,
+        "decode_ms": 4288.917666,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "wall_s": 66.582207883
+    }
+  },
+  "flash-attention": {
+    "legacy": {
+      "phase_totals": {
+        "prefill_ms": 63447.128828,
+        "decode_ms": 4697.410272,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "wall_s": 68.319199888
+    },
+    "prefill": {
+      "phase_totals": {
+        "prefill_ms": 65101.388775,
+        "decode_ms": 4698.213572,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "wall_s": 69.983087243
+    },
+    "context_legacy": {
+      "phase_totals": {
+        "prefill_ms": 62542.998293,
+        "decode_ms": 4466.925578,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "wall_s": 67.188995653
+    },
+    "context_openjev": {
+      "phase_totals": {
+        "prefill_ms": 74165.28613200001,
+        "decode_ms": 5192.55786,
+        "logits_copy_ms": 0.0,
+        "sampling_ms": 0.0,
+        "entropy_ms": 0.0,
+        "decode_calls": 32
+      },
+      "wall_s": 79.542428442
+    }
+  }
+}

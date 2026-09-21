@@ -21,7 +21,7 @@ struct Args {
     gpu_layers: i32,
     #[arg(long, default_value_t = 0)]
     main_gpu: i32,
-    #[arg(long, default_value_t = 4096)]
+    #[arg(long, default_value_t = 8192)]
     context_size: u32,
     #[arg(long, default_value_t = 512)]
     batch_size: u32,

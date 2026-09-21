@@ -1,0 +1,52 @@
+{
+  "source_run": "benchmarks/results/research-confirmation-additional-seeds",
+  "scope": "Completed legacy and prefill arms at seed 123; remaining seeds/arms are still running",
+  "seed": 123,
+  "reference_arm": "legacy",
+  "candidate_arm": "prefill",
+  "overall": {
+    "total": 231,
+    "reference_correct": 163,
+    "candidate_correct": 185,
+    "reference_valid": 231,
+    "candidate_valid": 231,
+    "delta_percentage_points": 9.523809523809524,
+    "fixed_ids": [
+      "easy-intent-00",
+      "easy-intent-08",
+      "easy-tool_selection-04",
+      "easy-tool_selection-08",
+      "easy-tool_selection-11",
+      "original-intent-02-0",
+      "original-intent-02-1",
+      "original-intent-06-0",
+      "original-intent-06-1",
+      "original-routing-01-0",
+      "original-routing-01-1",
+      "hard-opus-a-long_policy-01",
+      "hard-opus-a-long_policy-08",
+      "hard-opus-a-long_policy-19",
+      "hard-opus-a-temporal_numeric-06",
+      "hard-opus-b-multi_hop-03",
+      "hard-opus-b-multi_hop-07",
+      "hard-opus-c-long_policy-05",
+      "hard-sol-a-multi_hop-09",
+      "hard-sol-a-trap-05",
+      "hard-sol-a-trap-15",
+      "hard-sol-b-judge_hard-18",
+      "hard-sol-b-routing_hard-07",
+      "hard-sol-c-judge_hard-08",
+      "hard-sol-c-multi_hop-07",
+      "hard-sol-c-multi_hop-11"
+    ],
+    "regressed_ids": [
+      "original-intent-05-1",
+      "hard-opus-b-ambiguous-03",
+      "hard-opus-b-tradeoff-08",
+      "hard-sol-c-judge_hard-13"
+    ],
+    "mcnemar_exact_unadjusted_p": 5.947612226009369e-05,
+    "trace_pairs_audited": 0,
+    "trace_pairs_differing": 0
+  }
+}

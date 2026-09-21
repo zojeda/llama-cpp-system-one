@@ -1,0 +1,114 @@
+{
+  "baseline": {
+    "compile": false
+  },
+  "skip_zero_sc": {
+    "layout": {
+      "skip_zero_self_conditioning": true
+    },
+    "development": true
+  },
+  "compiler_control": {
+    "development": true
+  },
+  "thought_canvas": {
+    "layout": {
+      "canvas_prefix": "<|channel>thought\n<channel|>"
+    },
+    "development": true
+  },
+  "thought_prefill": {
+    "layout": {
+      "prefill_suffix": "<|channel>thought\n<channel|>"
+    },
+    "development": true
+  },
+  "roles": {
+    "roles": true,
+    "development": true
+  },
+  "compact": {
+    "compact": true,
+    "development": true
+  },
+  "semantic": {
+    "semantic": true,
+    "development": true
+  },
+  "turn_close": {
+    "layout": {
+      "canvas_suffix": "<turn|>"
+    },
+    "development": true
+  },
+  "turn_close_pad": {
+    "layout": {
+      "canvas_suffix": "<turn|>",
+      "pad_to": 16
+    },
+    "development": true
+  },
+  "reference_layout": {
+    "roles": true,
+    "semantic": true,
+    "compact": true,
+    "layout": {
+      "canvas_prefix": "<|channel>thought\n<channel|>",
+      "canvas_suffix": "<turn|>",
+      "pad_to": 16
+    },
+    "development": true
+  },
+  "openjev_text": {
+    "openjev_wording": true,
+    "layout": {
+      "canvas_prefix": "<|channel>thought\n<channel|>",
+      "canvas_suffix": "<turn|>",
+      "pad_to": 16
+    },
+    "development": true
+  },
+  "djev_text": {
+    "djev_wording": true,
+    "layout": {
+      "canvas_prefix": "<|channel>thought\n<channel|>",
+      "canvas_suffix": "<turn|>",
+      "pad_to": 16
+    },
+    "development": true
+  },
+  "openjev_adaptive": {
+    "openjev_wording": true,
+    "layout": {
+      "canvas_prefix": "<|channel>thought\n<channel|>",
+      "canvas_suffix": "<turn|>",
+      "pad_to": 16,
+      "adaptive_samples": true
+    },
+    "development": true
+  },
+  "adaptive": {
+    "layout": {
+      "adaptive_samples": true
+    },
+    "development": true
+  },
+  "samples4": {
+    "options": {
+      "samples": 4
+    },
+    "development": true
+  },
+  "steps2": {
+    "options": {
+      "steps": 2
+    },
+    "development": true
+  },
+  "steps4": {
+    "options": {
+      "steps": 4
+    },
+    "development": true
+  }
+}
